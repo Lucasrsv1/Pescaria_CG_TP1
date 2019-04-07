@@ -9,12 +9,12 @@ namespace Pescaria_CG_TP1 {
 	public partial class OpenGLForm : Form {
 		public OpenGLForm () {
 			InitializeComponent();
+			SceneManager.Form = this;
 		}
 
 		private int glWidth, glHeight;
 
 		private OpenGL gl;
-		private GameObject fish1;
 
 		private void openGLControl_OpenGLInitialized (object sender, EventArgs e) {
 			// Salva a referência ao objeto do OpenGL
@@ -23,16 +23,32 @@ namespace Pescaria_CG_TP1 {
 			// Cor de fundo
 			gl.ClearColor(0, 0, 0, 0);
 
-			fish1 = new GameObject(gl, new Vector2(100, 100));
-			Bitmap textureImage = new Bitmap("./Textures/FISH1_SWIM_RIGHT.png");
-			fish1.Animator.AddTexture("FISH1_SWIM_RIGHT", textureImage, 6, 600);
+			for (int i = 0; i < 5; i++) {
+				GameObject fish = new GameObject(gl, new Vector2(100, 100), new Vector2(0, 150 * i));
+				SceneManager.AddObject(fish);
 
-			Bitmap textureImage2 = new Bitmap("./Textures/FISH1_SWIM_LEFT.png");
-			fish1.Animator.AddTexture("FISH1_SWIM_LEFT", textureImage2, 6, 600);
+				fish.AddOnClickListener(fish.Destroy);
+				if (i == 2)
+					fish.InteractiveDuringPause = true;
 
-			fish1.Animator.CurrentTexture = "FISH1_SWIM_RIGHT";
-			fish1.Transform.Translate(new Vector2(300, 0), 1500);
-			fish1.Animator.LoadTexture("FISH1_SWIM_LEFT", 1500);
+				fish.Animator.AddTexture("FISH1_SWIM_RIGHT", new Bitmap("./Textures/FISH1_SWIM_RIGHT.png"), 6, 600);
+				fish.Animator.AddTexture("FISH1_REST_RIGHT", new Bitmap("./Textures/FISH1_REST_RIGHT.png"), 6, 600);
+				fish.Animator.AddTexture("FISH1_SWIM_LEFT", new Bitmap("./Textures/FISH1_SWIM_LEFT.png"), 6, 600);
+				fish.Animator.AddTexture("FISH1_REST_LEFT", new Bitmap("./Textures/FISH1_REST_LEFT.png"), 6, 600);
+
+				AnimationClip animationClip = new AnimationClip(AnimationClip.ClipTypes.LOOP);
+				animationClip.AddClipPoint(1000, "FISH1_SWIM_RIGHT", new Vector2(200, 0));
+				animationClip.AddClipPoint(1000);
+				animationClip.AddClipPoint(1000, "FISH1_SWIM_RIGHT", new Vector2(200, 0));
+				animationClip.AddClipPoint(1000, "FISH1_REST_RIGHT");
+				animationClip.AddClipPoint(1000, "FISH1_SWIM_LEFT", new Vector2(-200, 0));
+				animationClip.AddClipPoint(1000);
+				animationClip.AddClipPoint(1000, "FISH1_SWIM_LEFT", new Vector2(-200, 0));
+				animationClip.AddClipPoint(1000, "FISH1_REST_LEFT");
+				fish.Animator.AddAnimationClip("CLIP_1", animationClip);
+
+				fish.Animator.PlayAnimationClip("CLIP_1");
+			}
 		}
 
 		private void openGLControl_Resized (object sender, EventArgs e) {
@@ -59,14 +75,20 @@ namespace Pescaria_CG_TP1 {
 			gl.Ortho(0, glWidth, glHeight, 0, -5, 5);
 
 			// Draw objects
-			fish1.OpenGLDraw(glWidth, glHeight);
+			SceneManager.OpenGLDraw(glWidth, glHeight);
 
 			gl.Flush();
+		}
+
+		private void openGLControl1_Click (object sender, EventArgs e) {
+			SceneManager.MouseClick();
 		}
 
 		private void openGLControl1_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e) {
 			if (e.KeyCode == Keys.Escape)
 				Application.Exit();
+			else if (e.KeyCode == Keys.P)
+				SceneManager.Pause();
 		}
 	}
 }

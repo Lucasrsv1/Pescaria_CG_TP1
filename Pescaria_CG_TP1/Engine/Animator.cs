@@ -11,17 +11,18 @@ namespace Pescaria_CG_TP1.Engine {
 			public TextureToLoad (string textureKey, int timeout) {
 				this.Timeout = timeout;
 				this.TextureKey = textureKey;
-				this.Start = DateTime.Now;
+				this.Started = SceneManager.Now;
 			}
 
 			public int Timeout;
 			public string TextureKey;
-			public DateTime Start;
+			public DateTime Started;
 		}
 
 		public Animator (OpenGL gl) {
 			this.gl = gl;
 			this.Textures = new Dictionary<string, Texture>();
+			this.AnimationClips = new Dictionary<string, AnimationClip>();
 
 			this.currentFrame = -1;
 			this.texturesToLoad = new List<TextureToLoad>();
@@ -40,11 +41,14 @@ namespace Pescaria_CG_TP1.Engine {
 			set {
 				currentTexture = value;
 				currentFrame = 0;
-				frameInitiated = DateTime.Now;
+				frameInitiated = SceneManager.Now;
 			}
 		}
 
+		public string CurrentAnimationClip { get; private set; }
+
 		public Dictionary<string, Texture> Textures { get; private set; }
+		public Dictionary<string, AnimationClip> AnimationClips { get; private set; }
 
 		public void AddTexture (string key, Bitmap textureImage, int qtyFrames = 1, int duration = 1, Texture.Orientations orientation = Texture.Orientations.HORIZONTAL) {
 			uint[] textureID = new uint[1];
@@ -76,41 +80,63 @@ namespace Pescaria_CG_TP1.Engine {
 			this.texturesToLoad.Add(new TextureToLoad(textureKey, timeout));
 		}
 
+		public void AddAnimationClip (string clipKey, AnimationClip animationClip) {
+			this.AnimationClips.Add(clipKey, animationClip);
+		}
+
+		public void PlayAnimationClip (string clipKey) {
+			this.CurrentAnimationClip = clipKey;
+		}
+
+		public void StopAnimationClip () {
+			this.CurrentAnimationClip = "";
+		}
+
+		public bool IsPlayingClip () {
+			return !string.IsNullOrEmpty(this.CurrentAnimationClip) && this.AnimationClips.ContainsKey(this.CurrentAnimationClip);
+		}
+
 		public void OpenGLDraw (int glWidth, int glHeight, Transform transform) {
-			if (string.IsNullOrEmpty(this.CurrentTexture)) return;
-
-			Texture texture = this.Textures[this.CurrentTexture];
-			if (this.currentFrame < 0 || this.currentFrame > texture.QtyFrames) {
-				this.currentFrame = 0;
-				this.frameInitiated = DateTime.Now;
-			} else if (DateTime.Now.Subtract(this.frameInitiated).TotalMilliseconds >= texture.FrameDuration) {
-				this.currentFrame++;
-				if (this.currentFrame > texture.QtyFrames)
-					this.currentFrame = 0;
-
-				this.frameInitiated = DateTime.Now;
+			if (!string.IsNullOrEmpty(this.CurrentAnimationClip) && this.AnimationClips.ContainsKey(this.CurrentAnimationClip)) {
+				// Executa a animação do clipe atual
+				this.AnimationClips[this.CurrentAnimationClip].OpenGLDraw(this, transform);
 			}
 
-			gl.Enable(OpenGL.GL_TEXTURE_2D);
-			gl.BindTexture(OpenGL.GL_TEXTURE_2D, texture.ID);
-			gl.Begin(BeginMode.TriangleFan);
-				texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.TOP_LEFT);
-				gl.Vertex(transform.Position.x, transform.Position.y, 0f);
+			if (!string.IsNullOrEmpty(this.CurrentTexture) && this.Textures.ContainsKey(this.CurrentTexture)) {
+				// Executa a animação da textura atual
+				Texture texture = this.Textures[this.CurrentTexture];
+				if (this.currentFrame < 0 || this.currentFrame > texture.QtyFrames) {
+					this.currentFrame = 0;
+					this.frameInitiated = SceneManager.Now;
+				} else if (SceneManager.Now.Subtract(this.frameInitiated).TotalMilliseconds >= texture.FrameDuration) {
+					this.currentFrame++;
+					if (this.currentFrame > texture.QtyFrames)
+						this.currentFrame = 0;
 
-				texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.TOP_RIGHT);
-				gl.Vertex(transform.Position.x + transform.Size.x, transform.Position.y, 0f);
+					this.frameInitiated = SceneManager.Now;
+				}
 
-				texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.BOTTOM_RIGHT);
-				gl.Vertex(transform.Position.x + transform.Size.x, transform.Position.y + transform.Size.y, 0f);
+				gl.Enable(OpenGL.GL_TEXTURE_2D);
+				gl.BindTexture(OpenGL.GL_TEXTURE_2D, texture.ID);
+				gl.Begin(BeginMode.TriangleFan);
+					texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.TOP_LEFT);
+					gl.Vertex(transform.Position.X, transform.Position.Y, 0f);
 
-				texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.BOTTOM_LEFT);
-				gl.Vertex(transform.Position.x, transform.Position.y + transform.Size.y, 0f);
-			gl.End();
-			gl.Disable(OpenGL.GL_TEXTURE_2D);
+					texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.TOP_RIGHT);
+					gl.Vertex(transform.Position.X + transform.Size.X, transform.Position.Y, 0f);
+
+					texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.BOTTOM_RIGHT);
+					gl.Vertex(transform.Position.X + transform.Size.X, transform.Position.Y + transform.Size.Y, 0f);
+
+					texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.BOTTOM_LEFT);
+					gl.Vertex(transform.Position.X, transform.Position.Y + transform.Size.Y, 0f);
+				gl.End();
+				gl.Disable(OpenGL.GL_TEXTURE_2D);
+			}
 
 			// Carrega as texturas que foram configuradas para serem carregadas após um tempo (timeout)
 			for (int l = 0; l < texturesToLoad.Count; l++) {
-				if (DateTime.Now.Subtract(texturesToLoad[l].Start).TotalMilliseconds >= texturesToLoad[l].Timeout) {
+				if (SceneManager.Now.Subtract(texturesToLoad[l].Started).TotalMilliseconds >= texturesToLoad[l].Timeout) {
 					this.CurrentTexture = texturesToLoad[l].TextureKey;
 					texturesToLoad.Remove(texturesToLoad[l]);
 				}

@@ -39,24 +39,24 @@ namespace Pescaria_CG_TP1.Engine {
 			Vector2 coord = Vector2.Identity;
 
 			if (this.Orientation == Orientations.HORIZONTAL)
-				coord.x = frameSize * frame;
+				coord.X = frameSize * frame;
 			else
-				coord.y = frameSize * frame;
+				coord.Y = frameSize * frame;
 
 			switch (position) {
 				case CoordinatesPosition.TOP_RIGHT:
-					coord.x += this.Orientation == Orientations.HORIZONTAL ? frameSize : 1;
+					coord.X += this.Orientation == Orientations.HORIZONTAL ? frameSize : 1;
 					break;
 				case CoordinatesPosition.BOTTOM_LEFT:
-					coord.y += this.Orientation == Orientations.HORIZONTAL ? 1 : frameSize;
+					coord.Y += this.Orientation == Orientations.HORIZONTAL ? 1 : frameSize;
 					break;
 				case CoordinatesPosition.BOTTOM_RIGHT:
-					coord.x += this.Orientation == Orientations.HORIZONTAL ? frameSize : 1;
-					coord.y += this.Orientation == Orientations.HORIZONTAL ? 1 : frameSize;
+					coord.X += this.Orientation == Orientations.HORIZONTAL ? frameSize : 1;
+					coord.Y += this.Orientation == Orientations.HORIZONTAL ? 1 : frameSize;
 					break;
 			}
 
-			gl.TexCoord(coord.x, coord.y);
+			gl.TexCoord(coord.X, coord.Y);
 		}
 	}
 }

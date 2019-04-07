@@ -47,6 +47,7 @@ namespace Pescaria_CG_TP1 {
 			this.openGLControl1.OpenGLInitialized += new System.EventHandler(this.openGLControl_OpenGLInitialized);
 			this.openGLControl1.OpenGLDraw += new SharpGL.RenderEventHandler(this.openGLControl1_OpenGLDraw);
 			this.openGLControl1.Resized += new System.EventHandler(this.openGLControl_Resized);
+			this.openGLControl1.Click += new System.EventHandler(this.openGLControl1_Click);
 			this.openGLControl1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.openGLControl1_PreviewKeyDown);
 			// 
 			// OpenGLForm
@@ -63,7 +64,8 @@ namespace Pescaria_CG_TP1 {
 		}
 
 		#endregion
-		private SharpGL.OpenGLControl openGLControl1;
+
+		public OpenGLControl openGLControl1;
 	}
 }
 
