@@ -1,2 +1,13 @@
 Fishes:
 https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?item=134a143f33661k3o0l
+
+Hook:
+https://www.vectorstock.com/royalty-free-vector/summer-fishing-hook-icon-simple-style-vector-21595848
+
+Bubble:
+https://www.kisspng.com/png-sea-ocean-soap-bubble-clip-art-soap-bubbles-3841153/
+
+Background and Vessel:
+https://www.gamedevmarket.net/asset/ocean-background-hd-582/
+https://pngtree.com/freepng/vector-fishing-boat-freighter_2425030.html
+https://answers.unity.com/questions/810758/generating-sprite-objects-and-destroying-them-afte.html

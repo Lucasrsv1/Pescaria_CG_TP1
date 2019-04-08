@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static Pescaria_CG_TP1.Engine.AnimationClip;
 
 namespace Pescaria_CG_TP1.Engine {
 	public class Transform {
@@ -28,6 +29,7 @@ namespace Pescaria_CG_TP1.Engine {
 		}
 
 		private List<Force> forces;
+		private Callback setPositionFn;
 
 		public Vector2 Position { get; set; }
 		public Vector2 Size { get; set; }
@@ -36,7 +38,16 @@ namespace Pescaria_CG_TP1.Engine {
 			forces.Add(new Force(move, duration));
 		}
 
+		public void SetPositionFn (Callback cb) {
+			this.setPositionFn = cb;
+		}
+
 		public void OpenGLDraw () {
+			if (this.setPositionFn != null) {
+				this.setPositionFn();
+				return;
+			}
+
 			for (int f = 0; f < forces.Count; f++) {
 				double timePassed = SceneManager.Now.Subtract(this.forces[f].MovimentInitiated).TotalMilliseconds;
 				if (timePassed > this.forces[f].Duration)

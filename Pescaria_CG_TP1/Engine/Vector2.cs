@@ -89,11 +89,11 @@ namespace Pescaria_CG_TP1.Engine {
 		}
 
 		public static Vector2 operator + (Vector2 a, Vector2 b) {
-			return new Vector2(a.x + b.x, a.y + b.y, Math.Max(a.refX, b.refX), Math.Max(a.refY, b.refY));
+			return new Vector2(a.x + b.x, a.y + b.y, a.refX, a.refY);
 		}
 
 		public static Vector2 operator - (Vector2 a, Vector2 b) {
-			return new Vector2(a.x - b.x, a.y - b.y, Math.Max(a.refX, b.refX), Math.Max(a.refY, b.refY));
+			return new Vector2(a.x - b.x, a.y - b.y, a.refX, a.refY);
 		}
 
 		public static Vector2 operator - (Vector2 a) {
