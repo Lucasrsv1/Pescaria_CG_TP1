@@ -1,5 +1,10 @@
 Fishes:
 https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?item=134a143f33661k3o0l
+https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?item=1940953k9t2s2v4d3l
+https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?item=1z459y3d7x4i8c6s3h
+
+Fish Food (Lives):
+https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?item=194k958y6x618q269l
 
 Hook:
 https://www.vectorstock.com/royalty-free-vector/summer-fishing-hook-icon-simple-style-vector-21595848
@@ -11,3 +16,7 @@ Background and Vessel:
 https://www.gamedevmarket.net/asset/ocean-background-hd-582/
 https://pngtree.com/freepng/vector-fishing-boat-freighter_2425030.html
 https://answers.unity.com/questions/810758/generating-sprite-objects-and-destroying-them-afte.html
+
+Bombs and explosion effects:
+https://idznak.itch.io/make-war-not-love-assets-pack
+https://indiedevs.itch.io/70-video-game-effects

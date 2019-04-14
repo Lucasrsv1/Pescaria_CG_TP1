@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace Pescaria_CG_TP1.Engine {
 	public class AnimationClip {
+		public const string CURRENT_TEXTURE = "";
+		public const string INVISIBLE = "INVISIBLE_CONST";
 		public enum ClipTypes { ONCE, LOOP, FORWARD_AND_BACKWARD }
 
 		public delegate void Callback ();
@@ -77,6 +79,7 @@ namespace Pescaria_CG_TP1.Engine {
 					for (int c = 0; c < this.clipPoints.Count; c++) {
 						// Restaura o clip no início
 						this.clipPoints[c].MoveAdded = false;
+						this.clipPoints[c].CallbackCalled = false;
 					}
 
 					switch (this.ClipType) {
@@ -98,11 +101,13 @@ namespace Pescaria_CG_TP1.Engine {
 			}
 
 			if (clip != null) {
-				if (clip.BeforeCallback != null && !clip.CallbackCalled)
+				if (clip.BeforeCallback != null && !clip.CallbackCalled) {
 					clip.BeforeCallback();
+					clip.CallbackCalled = true;
+				}
 
 				if (!string.IsNullOrEmpty(clip.TextureKey) && animator.CurrentTexture != clip.TextureKey)
-					animator.CurrentTexture = clip.TextureKey;
+					animator.CurrentTexture = clip.TextureKey != INVISIBLE ? clip.TextureKey : "";
 
 				if (clip.Move != null && !clip.MoveAdded) {
 					transform.Translate(clip.Move * (!this.backward ? 1 : -1), clip.Duration);

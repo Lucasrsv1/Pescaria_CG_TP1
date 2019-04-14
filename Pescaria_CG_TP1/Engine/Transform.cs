@@ -4,64 +4,104 @@ using static Pescaria_CG_TP1.Engine.AnimationClip;
 
 namespace Pescaria_CG_TP1.Engine {
 	public class Transform {
-		private class Force {
-			public Force (Vector2 move, int duration) {
-				this.ToMove = move;
+		public const int DISABLE_AXIS_MOVIMENT = int.MinValue;
+
+		private class Moviment {
+			public Moviment (Vector2 newPosition, int duration, Vector2 startPosition) {
+				this.ToPosition = newPosition;
 				this.Duration = duration;
-				this.MovimentInitiated = SceneManager.Now;
-				this.Moved = Vector2.Zero;
+				this.StartPosition = startPosition;
+				this.Initiated = SceneManager.Now;
 			}
 
 			public int Duration { get; private set; }
-			public Vector2 Moved { get; private set; }
-			public Vector2 ToMove { get; private set; }
-			public DateTime MovimentInitiated { get; private set; }
-
-			public void AddToMoved (Vector2 moved) {
-				this.Moved += moved;
-			}
+			public Vector2 ToPosition { get; private set; }
+			public Vector2 StartPosition { get; private set; }
+			public DateTime Initiated { get; private set; }
 		}
 
-		public Transform (Vector2 size, Vector2 position = null) {
+		public Transform (Vector2 size, Vector2 position = null, double rotation = 0, Vector2 scale = null, string tag = "") {
 			this.Size = size;
-			this.Position = position != null ? position : Vector2.Zero;
-			this.forces = new List<Force>();
+			this.Position = position ?? Vector2.Zero;
+			this.Rotation = rotation;
+			this.Scale = scale ?? Vector2.One;
+			this.Tag = tag;
+
+			this.moviments = new List<Moviment>();
 		}
 
-		private List<Force> forces;
+		private float spinVelocity = 0;
+		private List<Moviment> moviments;
 		private Callback setPositionFn;
 
+		public string Tag { get; set; }
+		public double Rotation { get; set; }
+		public Vector2 Scale { get; set; }
 		public Vector2 Position { get; set; }
 		public Vector2 Size { get; set; }
 
-		public void Translate (Vector2 move, int duration) {
-			forces.Add(new Force(move, duration));
+		public Vector2 PhysicalPosition {
+			get {
+				Vector2 result = this.Position.Clone();
+				if (this.Scale.X == -1)
+					result.X += this.Size.X;
+
+				if (this.Scale.Y == -1)
+					result.Y += this.Size.Y;
+
+				return result;
+			}
+		}
+
+		public void Translate (Vector2 newPosition, int duration) {
+			moviments.Add(new Moviment(newPosition, duration, this.Position));
 		}
 
 		public void SetPositionFn (Callback cb) {
 			this.setPositionFn = cb;
 		}
 
+		public void RemovePositionFn (Callback cb) {
+			this.setPositionFn = cb;
+		}
+
+		public void Spin (float speed) {
+			spinVelocity = speed;
+		}
+
 		public void OpenGLDraw () {
+			if (!SceneManager.IsPaused)
+				this.Rotation += this.spinVelocity;
+
 			if (this.setPositionFn != null) {
 				this.setPositionFn();
 				return;
 			}
 
-			for (int f = 0; f < forces.Count; f++) {
-				double timePassed = SceneManager.Now.Subtract(this.forces[f].MovimentInitiated).TotalMilliseconds;
-				if (timePassed > this.forces[f].Duration)
-					timePassed = this.forces[f].Duration;
+			for (int f = 0; f < moviments.Count; f++) {
+				double timePassed = SceneManager.Now.Subtract(this.moviments[f].Initiated).TotalMilliseconds;
+				if (timePassed > this.moviments[f].Duration)
+					timePassed = this.moviments[f].Duration;
 
-				Vector2 toMoveNow = (this.forces[f].ToMove * (timePassed / this.forces[f].Duration)) - this.forces[f].Moved;
+				Vector2 move = new Vector2(this.moviments[f].ToPosition.X != DISABLE_AXIS_MOVIMENT ? this.moviments[f].ToPosition.X : this.moviments[f].StartPosition.X, this.moviments[f].ToPosition.Y != DISABLE_AXIS_MOVIMENT ? this.moviments[f].ToPosition.Y : this.moviments[f].StartPosition.Y) - this.moviments[f].StartPosition;
+				Vector2 toMoveNow = this.moviments[f].StartPosition + (move * (timePassed / this.moviments[f].Duration));
 
-				this.Position += toMoveNow;
-				this.forces[f].AddToMoved(toMoveNow);
+				if (this.moviments[f].ToPosition.X == DISABLE_AXIS_MOVIMENT)
+					toMoveNow.X = this.Position.X;
 
-				// Remove as forças que já foram totalmente executadas
-				if (timePassed == this.forces[f].Duration)
-					this.forces.RemoveAt(f--);
+				if (this.moviments[f].ToPosition.Y == DISABLE_AXIS_MOVIMENT)
+					toMoveNow.Y = this.Position.Y;
+
+				this.Position = toMoveNow;
+
+				// Remove the moviments that have already been executed
+				if (timePassed == this.moviments[f].Duration)
+					this.moviments.RemoveAt(f--);
 			}
+		}
+
+		public override string ToString () {
+			return string.Format("{{ X: {0}, Y: {1}, Width: {2}, Height: {3} }}", this.Position.X, this.Position.Y, this.Size.X, this.Size.Y);
 		}
 	}
 }

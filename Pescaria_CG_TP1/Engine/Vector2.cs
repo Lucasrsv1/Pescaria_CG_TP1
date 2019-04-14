@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Pescaria_CG_TP1.Engine {
 	public class Vector2 {
-		public static Vector2 Identity {
+		public static Vector2 One {
 			get {
 				return new Vector2(1, 1);
 			}
@@ -11,74 +11,106 @@ namespace Pescaria_CG_TP1.Engine {
 
 		public static Vector2 Zero {
 			get {
-				return new Vector2();
+				return new Vector2(0, 0);
 			}
 		}
 
+		// Check collision between a game objects and a point (usually the cursor)
 		public static bool Overlap (Transform transform, Vector2 point) {
-			return  point.X > transform.Position.X && point.X < transform.Position.X + transform.Size.X &&
-					point.Y > transform.Position.Y && point.Y < transform.Position.Y + transform.Size.Y;
+			return  point.X >= transform.PhysicalPosition.X && point.X <= transform.PhysicalPosition.X + transform.Size.X &&
+					point.Y >= transform.PhysicalPosition.Y && point.Y <= transform.PhysicalPosition.Y + transform.Size.Y;
 		}
 
+		// Check collision between two game objects
 		public static bool Overlap (Transform transform, Transform transform2) {
-			return  transform2.Position.X > transform.Position.X && transform2.Position.X < transform.Position.X + transform.Size.X &&
-					transform2.Position.Y > transform.Position.Y && transform2.Position.Y < transform.Position.Y + transform.Size.Y;
-		}
-
-		public Vector2 () {
-			this.refX = 0;
-			this.refY = 0;
-			this.x = 0;
-			this.y = 0;
+			return  (transform2.PhysicalPosition.X >= transform.PhysicalPosition.X && transform2.PhysicalPosition.X <= transform.PhysicalPosition.X + transform.Size.X ||
+					transform.PhysicalPosition.X >= transform2.PhysicalPosition.X && transform.PhysicalPosition.X <= transform2.PhysicalPosition.X + transform2.Size.X) &&
+					(transform2.PhysicalPosition.Y >= transform.PhysicalPosition.Y && transform2.PhysicalPosition.Y <= transform.PhysicalPosition.Y + transform.Size.Y ||
+					transform.PhysicalPosition.Y >= transform2.PhysicalPosition.Y && transform.PhysicalPosition.Y <= transform2.PhysicalPosition.Y + transform2.Size.Y);
 		}
 
 		public Vector2 (float x, float y) {
-			this.refX = 0;
-			this.refY = 0;
 			this.X = x;
 			this.Y = y;
+
+			this.refX = 0;
+			this.refY = 0;
 		}
 
 		public Vector2 (Point point) {
-			this.x = point.X;
-			this.y = point.Y;
+			this.X = point.X;
+			this.Y = point.Y;
+
+			this.refX = 0;
+			this.refY = 0;
+			this.constX = 0;
+			this.constY = 0;
 		}
 
-		public Vector2 (float x, float y, float refX, float refY) {
-			this.refX = refX;
-			this.refY = refY;
+		public Vector2 (float x, float y, float refX, float refY, float constX = 0, float constY = 0) {
 			this.X = x;
 			this.Y = y;
+
+			this.refX = refX;
+			this.refY = refY;
+			this.constX = constX;
+			this.constY = constY;
 		}
 
+		// Vector's actual values
 		private float x;
 		private float y;
+
+		// Reference values to use when calculating the porportional value of the vector
 		private float refX;
 		private float refY;
 
+		// Constant values to be removed from the proportional calculation of the vector's value (usually the size of a game object)
+		private float constX;
+		private float constY;
+
+		// Calculate X axis proportional value
 		public float X {
 			get {
 				if (refX == 0)
 					return x;
 				else
-					return x * SceneManager.ScreenSize.X / refX;
+					return (x * (SceneManager.ScreenSize.X - constX)) / (refX - constX);
 			}
 			set {
-				x = value;
+				if (refX == 0)
+					x = value;
+				else
+					x = (value * (refX - constX)) / (SceneManager.ScreenSize.X - constX);
 			}
 		}
 
+		// Calculate Y axis proportional value
 		public float Y {
 			get {
 				if (refY == 0)
 					return y;
 				else
-					return y * SceneManager.ScreenSize.Y / refY;
+					return (y * (SceneManager.ScreenSize.Y - constY)) / (refY - constY);
 			}
 			set {
-				y = value;
+				if (refY == 0)
+					y = value;
+				else
+					y = (value * (refY - constY)) / (SceneManager.ScreenSize.Y - constY);
 			}
 		}
+
+		public void ClearReferences () {
+			this.refX = 0;
+			this.refY = 0;
+		}
+
+		public Vector2 Clone () {
+			return new Vector2(this.x, this.y, this.refX, this.refY, this.constX, this.constY);
+		}
+
+		// Mathematical Operations:
 
 		public float Magnitude () {
 			return (float) Math.Sqrt(Math.Pow(this.X, 2) + Math.Pow(this.Y, 2));
@@ -89,23 +121,23 @@ namespace Pescaria_CG_TP1.Engine {
 		}
 
 		public static Vector2 operator + (Vector2 a, Vector2 b) {
-			return new Vector2(a.x + b.x, a.y + b.y, a.refX, a.refY);
+			return new Vector2(a.x + b.X, a.y + b.Y, a.refX, a.refY, a.constX, a.constY);
 		}
 
 		public static Vector2 operator - (Vector2 a, Vector2 b) {
-			return new Vector2(a.x - b.x, a.y - b.y, a.refX, a.refY);
+			return new Vector2(a.x - b.X, a.y - b.Y, a.refX, a.refY, a.constX, a.constY);
 		}
 
 		public static Vector2 operator - (Vector2 a) {
-			return new Vector2(-a.x, -a.y, a.refX, a.refY);
+			return new Vector2(-a.x, -a.y, a.refX, a.refY, a.constX, a.constY);
 		}
 
 		public static Vector2 operator / (Vector2 a, double b) {
-			return new Vector2(a.x / (float)b, a.y / (float)b, a.refX, a.refY);
+			return new Vector2(a.x / (float)b, a.y / (float)b, a.refX, a.refY, a.constX, a.constY);
 		}
 
 		public static Vector2 operator * (Vector2 a, double b) {
-			return new Vector2(a.x * (float) b, a.y * (float) b, a.refX, a.refY);
+			return new Vector2(a.x * (float) b, a.y * (float) b, a.refX, a.refY, a.constX, a.constY);
 		}
 
 		public override string ToString () {

@@ -9,6 +9,7 @@ namespace Pescaria_CG_TP1 {
 	public partial class OpenGLForm : Form {
 		public OpenGLForm () {
 			InitializeComponent();
+			this.WindowState = FormWindowState.Maximized;
 			SceneManager.Form = this;
 		}
 
@@ -17,9 +18,13 @@ namespace Pescaria_CG_TP1 {
 		private OpenGL gl;
 
 		private void openGLControl_OpenGLInitialized (object sender, EventArgs e) {
-			// Salva a referência ao objeto do OpenGL
+			// Save a reference to the OpenGL object
 			gl = openGLControl1.OpenGL;
+			Animator.gl = gl;
+			GameObject.gl = gl;
+
 			LoadCoordinateSystem();
+
 			SceneManager.ScreenSize.X = glWidth;
 			SceneManager.ScreenSize.Y = glHeight;
 
@@ -61,6 +66,8 @@ namespace Pescaria_CG_TP1 {
 				Application.Exit();
 			else if (e.KeyCode == Keys.P)
 				SceneManager.Pause();
+			else if (e.KeyCode == Keys.R)
+				SceneManager.ReleadLevel();
 
 			if (SceneManager.Player != null)
 				SceneManager.Player.PreviewKeyDown(e);

@@ -1,19 +1,24 @@
-﻿using System;
+﻿using Pescaria_CG_TP1.Scenes;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Pescaria_CG_TP1.Engine {
 	public static class SceneManager {
+		public const bool SHOW_COLLIDERS = false;
+
 		private static bool paused = false;
 		private static string currentScene = "";
 		private static TimeSpan pauseDelay = new TimeSpan();
 		private static DateTime pausedTime;
-		private static List<GameObject> sceneObjects = new List<GameObject>();
 		private static Dictionary<string, IScene> scenes = new Dictionary<string, IScene>();
 
-		public static Vector2 ScreenSize = Vector2.Zero;
 		public static OpenGLForm Form = null;
+		public static Vector2 ScreenSize = Vector2.Zero;
+
+		public static IHUD HUD = null;
 		public static PlayerObject Player = null;
+		public static List<GameObject> SceneObjects = new List<GameObject>();
 
 		public static bool IsPaused {
 			get { return paused; }
@@ -22,20 +27,20 @@ namespace Pescaria_CG_TP1.Engine {
 		public static void Pause () {
 			paused = !paused;
 			if (!paused)
-				// Se não está pausado é porque acabou de sair do pause, logo contabiliza o atraso do pause
+				// If it's not paused, the game just continued, therefor sum the pause delay
 				pauseDelay += SceneManager.Now.Subtract(pausedTime);
 			else
-				// Armazena o instante de início do pause
+				// Save the moment when the game was paused
 				pausedTime = DateTime.Now.Subtract(pauseDelay);
 		}
 
 		public static DateTime Now {
 			get {
 				if (paused)
-					// Retorna o momento do pause, congelando o jogo
+					// Returns the moment when the game was paused, freezing the game
 					return pausedTime;
 				else
-					// Retorna o momento atual com a correção do tempo que o software ficou pausado
+					// Returns the current moment less the pause delay
 					return DateTime.Now.Subtract(pauseDelay);
 			}
 		}
@@ -47,17 +52,21 @@ namespace Pescaria_CG_TP1.Engine {
 		public static void LoadScene (string sceneKey) {
 			paused = false;
 			pauseDelay = new TimeSpan();
-			sceneObjects.Clear();
+			SceneObjects.Clear();
 			currentScene = sceneKey;
 			scenes[currentScene].InitScene();
 		}
 
+		public static void ReleadLevel () {
+			LoadScene(currentScene);
+		}
+
 		public static void AddObject (GameObject obj) {
-			sceneObjects.Add(obj);
+			SceneObjects.Add(obj);
 		}
 
 		public static void RemoveObject (GameObject obj) {
-			sceneObjects.Remove(obj);
+			SceneObjects.Remove(obj);
 		}
 
 		public static void OpenGLDraw (int glWidth, int glHeight) {
@@ -67,33 +76,33 @@ namespace Pescaria_CG_TP1.Engine {
 			if (scenes.ContainsKey(currentScene))
 				scenes[currentScene].OpenGLDraw(glWidth, glHeight);
 
-			for (int o = 0; o < sceneObjects.Count; o++) {
-				if (sceneObjects[o].HasCollisionListeners()) {
-					for (int b = 0; b < sceneObjects.Count; b++) {
-						if (Vector2.Overlap(sceneObjects[o].Transform, sceneObjects[b].Transform))
-							sceneObjects[o].CollisionDetected(sceneObjects[b]);
+			for (int o = 0; o < SceneObjects.Count; o++) {
+				if (SceneObjects[o].HasCollisionListeners()) {
+					for (int b = 0; b < SceneObjects.Count; b++) {
+						if (Vector2.Overlap(SceneObjects[o].Transform, SceneObjects[b].Transform))
+							SceneObjects[o].CollisionDetected(SceneObjects[b]);
 					}
 				}
-				sceneObjects[o].OpenGLDraw(glWidth, glHeight);
+				SceneObjects[o].OpenGLDraw(glWidth, glHeight);
 			}
+
+			HUD.OpenGLDraw(glWidth, glHeight);
 		}
 
 		public static void MouseClick () {
 			Vector2 mousePos = new Vector2(Form.openGLControl1.PointToClient(Cursor.Position));
-			List<GameObject> objs = new List<GameObject>();
+			for (int i = SceneObjects.Count - 1; i >= 0; i--) {
+				if (!SceneObjects[i].HasClickListeners() || (paused && !SceneObjects[i].InteractiveDuringPause)) continue;
 
-			foreach (GameObject obj in sceneObjects) {
-				if (!obj.HasClickListeners() || (paused && !obj.InteractiveDuringPause)) continue;
+				// Fix cursor position due to the camera moviment
+				float posY = -Game.CameraYPosition;
 
-				// Em caso de ter clicado sobre o objeto, separa ele para chamar o callback
-				// Isso é necessário, pois o callback pode destruir o objeto alterando assim a lista sceneObjects, quebrando o loop.
-				if (Vector2.Overlap(obj.Transform, mousePos))
-					objs.Add(obj);
+				// If the object was clicked, call its callback
+				if (Vector2.Overlap(SceneObjects[i].Transform, mousePos + new Vector2(0, posY))) {
+					SceneObjects[i].Clicked();
+					break;
+				}
 			}
-
-			// Percorre os objetos clicados e chama seus callbacks
-			foreach (GameObject obj in objs)
-				obj.Clicked();
 		}
 	}
 }

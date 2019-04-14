@@ -3,21 +3,19 @@ using System.Collections.Generic;
 
 namespace Pescaria_CG_TP1.Engine {
 	public class GameObject {
+		public static OpenGL gl;
 		public delegate void EventCallback();
 		public delegate void CollisionCallback(GameObject collider);
 
-		public GameObject (OpenGL gl, Vector2 size, Vector2 position = null, string tag = "") {
-			this.gl = gl;
-			this.Animator = new Animator(gl);
-			this.Transform = new Transform(size, position);
+		public GameObject (Vector2 size, string tag = "", Vector2 position = null, double rotation = 0, Vector2 scale = null) {
+			this.Animator = new Animator();
+			this.Transform = new Transform(size, position, rotation, scale, tag);
 			this.InteractiveDuringPause = false;
 			this.Tag = tag;
 		}
 
-		protected OpenGL gl;
-
 		private List<EventCallback> onClickCallbacks = new List<EventCallback>();
-		private List<CollisionCallback> onCollisionCallbacks = new List<CollisionCallback>();
+		private Dictionary<string, CollisionCallback> onCollisionCallbacks = new Dictionary<string, CollisionCallback>();
 
 		public string Tag { get; set; }
 		public bool InteractiveDuringPause { get; set; }
@@ -37,11 +35,21 @@ namespace Pescaria_CG_TP1.Engine {
 		}
 
 		public void CollisionDetected (GameObject collider) {
-			foreach (CollisionCallback cb in this.onCollisionCallbacks) cb(collider);
+			List<CollisionCallback> callbacks = new List<CollisionCallback>();
+			foreach (KeyValuePair<string, CollisionCallback> pair in this.onCollisionCallbacks)
+				callbacks.Add(pair.Value);		// Get the callbacks
+
+			// And call them. It's necessary to call'em out of the last loop because it might remove itself, changing the loop elements.
+			for (int i = 0; i < callbacks.Count; i++)
+				callbacks[i](collider);
 		}
 
-		public void AddOnCollisionListener (CollisionCallback collisionCallback) {
-			this.onCollisionCallbacks.Add(collisionCallback);
+		public void AddOnCollisionListener (string eventKey, CollisionCallback collisionCallback) {
+			this.onCollisionCallbacks.Add(eventKey, collisionCallback);
+		}
+
+		public void RemoveCollisionListener (string eventKey) {
+			this.onCollisionCallbacks.Remove(eventKey);
 		}
 
 		public bool HasCollisionListeners () {
