@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 namespace Pescaria_CG_TP1.Engine {
 	public static class SceneManager {
+		// Show physical collider (debug)
 		public const bool SHOW_COLLIDERS = false;
 
 		private static bool paused = false;
@@ -17,6 +18,7 @@ namespace Pescaria_CG_TP1.Engine {
 		public static Vector2 ScreenSize = Vector2.Zero;
 
 		public static IHUD HUD = null;
+		public static GameObject Aim = null;
 		public static PlayerObject Player = null;
 		public static List<GameObject> SceneObjects = new List<GameObject>();
 
@@ -89,16 +91,26 @@ namespace Pescaria_CG_TP1.Engine {
 			HUD.OpenGLDraw(glWidth, glHeight);
 		}
 
-		public static void MouseClick () {
+		public static Vector2 MousePositionInScene () {
 			Vector2 mousePos = new Vector2(Form.openGLControl1.PointToClient(Cursor.Position));
+
+			// Fix cursor position due to the camera moviment
+			float posY = -Game.CameraYPosition;
+			return mousePos + new Vector2(0, posY);
+		}
+
+		public static void MouseClick () {
 			for (int i = SceneObjects.Count - 1; i >= 0; i--) {
 				if (!SceneObjects[i].HasClickListeners() || (paused && !SceneObjects[i].InteractiveDuringPause)) continue;
 
-				// Fix cursor position due to the camera moviment
-				float posY = -Game.CameraYPosition;
-
 				// If the object was clicked, call its callback
-				if (Vector2.Overlap(SceneObjects[i].Transform, mousePos + new Vector2(0, posY))) {
+				if (SceneObjects[i].Tag == "Bubble") {
+					// Bubbles are small, so consider the aim object area insted of the cursor point
+					if (Vector2.Overlap(SceneObjects[i].Transform, Aim.Transform)) {
+						SceneObjects[i].Clicked();
+						break;
+					}
+				} else if (Vector2.Overlap(SceneObjects[i].Transform, MousePositionInScene())) {
 					SceneObjects[i].Clicked();
 					break;
 				}

@@ -8,11 +8,18 @@ using SharpGL.Enumerations;
 
 namespace Pescaria_CG_TP1.Scenes {
 	public class Game : IScene {
+		private static bool aimTextureRegistered = false;
+		private static uint AIM_TEXTURE_ID;
 		public static float CameraYPosition;
 
 		public Game (OpenGL gl) {
 			this.gl = gl;
 			this.random = new Random();
+
+			if (!aimTextureRegistered) {
+				AIM_TEXTURE_ID = Animator.RegisterTexture(new Bitmap("./Textures/AIM.png"));
+				aimTextureRegistered = true;
+			}
 		}
 
 		private OpenGL gl;
@@ -24,6 +31,45 @@ namespace Pescaria_CG_TP1.Scenes {
 			gameHUD.Init();
 			SceneManager.HUD = gameHUD;
 
+			// Create scene's background
+			CreateBackground();
+
+			// Create player
+			PlayerObject player = new PlayerObject(new Vector2(34, 71), "Player", new Vector2(SceneManager.ScreenSize.X / 2f, 5));
+			player.Animator.AddTexture("HOOK", new Bitmap("./Textures/HOOK.png"));
+			player.Animator.CurrentTexture = "HOOK";
+			SceneManager.AddObject(player);
+			SceneManager.Player = player;
+
+			// Create fishes
+			Fish.RegisterTextures();
+			Fish3.RegisterTextures();
+			new Thread(new ThreadStart(CreateFishes)).Start();
+
+			// Create bombs
+			Bombs.RegisterTextures();
+			new Thread(new ThreadStart(CreateBombs)).Start();
+
+			// Create bubbles
+			float bubblePos = 500;
+			while (bubblePos < 17000) {
+				CreateBubbles(new Vector2((float)this.random.NextDouble() * SceneManager.ScreenSize.X, bubblePos, SceneManager.ScreenSize.X, 0));
+				bubblePos += (float) this.random.NextDouble() * 500;
+			}
+
+			// Create player's aim
+			GameObject aim = new GameObject(new Vector2(50, 50), "Aim");
+			aim.Animator.AddTexture("AIM", AIM_TEXTURE_ID);
+			aim.Animator.CurrentTexture = "AIM";
+			aim.Transform.Spin(-3);
+			aim.Transform.SetPositionFn(() => {
+				aim.Transform.Position = SceneManager.MousePositionInScene() - aim.Transform.Size / 2f;
+			});
+			SceneManager.AddObject(aim);
+			SceneManager.Aim = aim;
+		}
+
+		public void CreateBackground () {
 			GameObject background = new GameObject(new Vector2(SceneManager.ScreenSize.X, 400, SceneManager.ScreenSize.X, 0), "", new Vector2(0, -225));
 			background.Animator.AddTexture("BACKGROUND", new Bitmap("./Textures/BACKGROUND.png"), 3, 2000);
 			background.Animator.CurrentTexture = "BACKGROUND";
@@ -34,33 +80,21 @@ namespace Pescaria_CG_TP1.Scenes {
 			background.Animator.CurrentTexture = "BACKGROUND_BOTTOM";
 			SceneManager.AddObject(background);
 
-			PlayerObject player = new PlayerObject(new Vector2(34, 71), "Player", new Vector2((SceneManager.ScreenSize.X - 34) / 2f, 5));
-			player.Animator.AddTexture("HOOK", new Bitmap("./Textures/HOOK.png"));
-			player.Animator.CurrentTexture = "HOOK";
-
-			SceneManager.AddObject(player);
-			SceneManager.Player = player;
-
-			Fish.RegisterTextures();
-			new Thread(new ThreadStart(CreateFishes)).Start();
-
-			GameObject fish2 = new GameObject(new Vector2(80, 80), "Fish", new Vector2(375, 375), 0, new Vector2(-1, 1));
-			fish2.Animator.AddTexture("GREEN_FISH_REST", new Bitmap("./Textures/GREEN_FISH_REST.png"), 20, 1000, Texture.Orientations.BOTH, 4);
-			fish2.Animator.CurrentTexture = "GREEN_FISH_REST";
-			SceneManager.AddObject(fish2);
-
-			float bubblePos = 500;
-			while (bubblePos < 17000) {
-				CreateBubbles(new Vector2((float)this.random.NextDouble() * SceneManager.ScreenSize.X, bubblePos, SceneManager.ScreenSize.X, 0));
-				bubblePos += (float) this.random.NextDouble() * 500;
-			}
+			GameObject sun = new GameObject(new Vector2(230, 300), "Sun", new Vector2(10, -450));
+			sun.Animator.AddTexture("SUN", new Bitmap("./Textures/SUN.png"));
+			sun.Animator.CurrentTexture = "SUN";
+			sun.Transform.SetPositionFn(() => {
+				if (CameraYPosition > 450)
+					sun.Transform.Position.Y = -CameraYPosition - 25;
+			});
+			SceneManager.AddObject(sun);
 		}
 
 		public void CreateBubbles (Vector2 centerPos) {
 			float size;
 			int qty = 1 + this.random.Next(4);
 			for (int i = 0; i < qty; i++) {
-				size = 8 + (float) this.random.NextDouble() * 12;
+				size = 10 + (float) this.random.NextDouble() * 16;
 				Vector2 pos = centerPos + (Vector2.One * ((this.random.NextDouble() + 6) * size * (this.random.NextDouble() > 0.5 ? -1 : 1)));
 
 				GameObject bubble = new GameObject(new Vector2(size, size), "Bubble", pos);
@@ -81,12 +115,41 @@ namespace Pescaria_CG_TP1.Scenes {
 		}
 
 		public void CreateFishes () {
-			Random random = new Random();
 			float fishPos = 200 + (float) this.random.NextDouble() * 150;
 			while (fishPos < 9400 && (SceneManager.Form == null || !SceneManager.Form.IsDisposed)) {
-				Fish.Instantiate(SceneManager.Player, new Vector2(0, fishPos));
-				fishPos += (float) this.random.NextDouble() * 200;
-				Thread.Sleep((int) Math.Round(random.NextDouble() * 750));
+				if (random.NextDouble() <= 0.33)
+					Fish3.Instantiate(SceneManager.Player, new Vector2(0, fishPos));
+				else
+					Fish.Instantiate(SceneManager.Player, new Vector2(0, fishPos));		// Fishes 1 and 2
+
+				fishPos += (float) this.random.NextDouble() * 175;
+				Thread.Sleep((int) Math.Round(random.NextDouble() * 650));
+			}
+		}
+
+		public void CreateBombs () {
+			float bombPos = 200 + (float) this.random.NextDouble() * 500;
+			while (bombPos < 9400 && (SceneManager.Form == null || !SceneManager.Form.IsDisposed)) {
+				Bombs.Instantiate(new Vector2(0, bombPos));
+				bombPos += (float) this.random.NextDouble() * 900;
+				Thread.Sleep((int) Math.Round(random.NextDouble() * 650));
+			}
+		}
+
+		public static void CreateClouds () {
+			Random random = new Random();
+			uint[] cloudsIds = new uint[3];
+			for (int i = 1; i <= 3; i++)
+				cloudsIds[i - 1] = Animator.RegisterTexture(new Bitmap("./Textures/CLOUD_" + i + ".png"));
+
+			// Create clouds
+			float cloudPos = -500;
+			while (cloudPos > -7300) {
+				GameObject cloud = new GameObject(new Vector2(250, 100), "Cloud", new Vector2(-200 + (float) random.NextDouble() * (SceneManager.ScreenSize.X + 200), cloudPos, SceneManager.ScreenSize.X, 0));
+				cloud.Animator.AddTexture("CLOUD", cloudsIds[random.Next(3)]);
+				cloud.Animator.CurrentTexture = "CLOUD";
+				SceneManager.AddObject(cloud);
+				cloudPos -= (float) random.NextDouble() * 300;
 			}
 		}
 

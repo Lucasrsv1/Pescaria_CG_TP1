@@ -1,6 +1,8 @@
-﻿using SharpGL;
+﻿using Pescaria_CG_TP1.Scenes;
+using SharpGL;
 using SharpGL.Enumerations;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Pescaria_CG_TP1.Engine {
@@ -10,17 +12,17 @@ namespace Pescaria_CG_TP1.Engine {
 			animationClip.AddClipPoint(5000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 500, 0, SceneManager.ScreenSize.Y));
 			animationClip.AddClipPoint(7000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 1500));
 			animationClip.AddClipPoint(5000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 2500));
-			animationClip.AddClipPoint(25000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 9500));
-			//animationClip.AddClipPoint(2000, "", new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 9500));
+			animationClip.AddClipPoint(26000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 9500));
+			animationClip.AddClipPoint(2000, "", new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 9500));
 			animationClip.AddClipPoint(2000);
-			//animationClip.AddClipPoint(2000, "", new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 0));
-			animationClip.AddClipPoint(25000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 0));
-			animationClip.AddClipPoint(450, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -100), () => {
+			animationClip.AddClipPoint(14000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -20));
+			animationClip.AddClipPoint(200, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -100), () => {
 				this.Transform.Scale.Y = -1;
 			});
 
-			animationClip.AddClipPoint(15000, AnimationClip.INVISIBLE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -6000), () => {
+			animationClip.AddClipPoint(15000, AnimationClip.INVISIBLE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -7000), () => {
 				// Start part II
+				Game.CreateClouds();
 				Random random = new Random();
 				for (int i = 0; i < SceneManager.SceneObjects.Count; i++) {
 					// Remove objects that are not needed anymore
@@ -34,12 +36,12 @@ namespace Pescaria_CG_TP1.Engine {
 					if (obj.Tag != "Hooked_Fish") continue;
 
 					obj.Transform.Spin(5);
+					obj.Transform.RemovePositionFn();
 					obj.Animator.StopAnimationClip();
 
 					AnimationClip fishAnimationClip = new AnimationClip(AnimationClip.ClipTypes.ONCE);
-					fishAnimationClip.AddClipPoint(1000, AnimationClip.CURRENT_TEXTURE, new Vector2((float) random.NextDouble() * (SceneManager.ScreenSize.X - obj.Transform.Size.X), -500 - ((float) random.NextDouble() * SceneManager.ScreenSize.Y), SceneManager.ScreenSize.X, 0, obj.Transform.Size.X, 0));
-					fishAnimationClip.AddClipPoint(13000, AnimationClip.CURRENT_TEXTURE, new Vector2((float) random.NextDouble() * (SceneManager.ScreenSize.X - obj.Transform.Size.X), -6000, SceneManager.ScreenSize.X, 0, obj.Transform.Size.X, 0));
-					fishAnimationClip.AddClipPoint(4000, AnimationClip.CURRENT_TEXTURE, new Vector2(0, 0));
+					fishAnimationClip.AddClipPoint((int) (14000 + (random.NextDouble() * 2000)), AnimationClip.CURRENT_TEXTURE, new Vector2((float) random.NextDouble() * (SceneManager.ScreenSize.X - obj.Transform.Size.X), -7000, SceneManager.ScreenSize.X, 0, obj.Transform.Size.X, 0));
+					fishAnimationClip.AddClipPoint(4500, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 0));
 
 					obj.Animator.AddAnimationClip("CLIP_2", fishAnimationClip);
 					obj.Animator.PlayAnimationClip("CLIP_2");
@@ -50,9 +52,18 @@ namespace Pescaria_CG_TP1.Engine {
 				}
 			});
 
+			animationClip.AddClipPoint(5000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -250));
+			animationClip.AddClipPoint(500, AnimationClip.CURRENT_TEXTURE, null, () => {
+				for (int i = 0; i < SceneManager.SceneObjects.Count; i++) {
+					// Remove objects that are not needed anymore
+					if (SceneManager.SceneObjects[i].Tag == "Hooked_Fish" || SceneManager.SceneObjects[i].Tag == "Aim")
+						SceneManager.SceneObjects[i--].Destroy();
+				}
+			});
+
 			this.Animator.AddAnimationClip("CLIP", animationClip);
 			this.Animator.PlayAnimationClip("CLIP");
-			this.Lives = 3;
+			this.Lives = 4;
 			this.FishScore = 0;
 			this.BubblesScore = 0;
 		}

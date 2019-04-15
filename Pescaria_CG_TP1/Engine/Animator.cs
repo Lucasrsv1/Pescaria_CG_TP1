@@ -49,6 +49,7 @@ namespace Pescaria_CG_TP1.Engine {
 			this.Textures = new Dictionary<string, Texture>();
 			this.AnimationClips = new Dictionary<string, AnimationClip>();
 
+			this.ZIndex = 0;
 			this.currentFrame = -1;
 			this.texturesToLoad = new List<TextureToLoad>();
 		}
@@ -69,6 +70,7 @@ namespace Pescaria_CG_TP1.Engine {
 			}
 		}
 
+		public float ZIndex { get; set; }
 		public string CurrentAnimationClip { get; private set; }
 
 		public Dictionary<string, Texture> Textures { get; private set; }
@@ -131,16 +133,16 @@ namespace Pescaria_CG_TP1.Engine {
 					gl.Scale(transform.Scale.X, transform.Scale.Y, 1);
 					gl.Begin(BeginMode.TriangleFan);
 						texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.TOP_LEFT);
-						gl.Vertex(transform.Size.X / -2f, transform.Size.Y / -2f, 0f);
+						gl.Vertex(transform.Size.X / -2f, transform.Size.Y / -2f, this.ZIndex);
 
 						texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.TOP_RIGHT);
-						gl.Vertex(transform.Size.X / 2f, transform.Size.Y / -2f, 0f);
+						gl.Vertex(transform.Size.X / 2f, transform.Size.Y / -2f, this.ZIndex);
 
 						texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.BOTTOM_RIGHT);
-						gl.Vertex(transform.Size.X / 2f, transform.Size.Y / 2f, 0f);
+						gl.Vertex(transform.Size.X / 2f, transform.Size.Y / 2f, this.ZIndex);
 
 						texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.BOTTOM_LEFT);
-						gl.Vertex(transform.Size.X / -2f, transform.Size.Y / 2f, 0f);
+						gl.Vertex(transform.Size.X / -2f, transform.Size.Y / 2f, this.ZIndex);
 					gl.End();
 				gl.PopMatrix();
 

@@ -59,10 +59,11 @@ namespace Pescaria_CG_TP1.Engine {
 
 		public void SetPositionFn (Callback cb) {
 			this.setPositionFn = cb;
+			this.moviments.Clear();
 		}
 
-		public void RemovePositionFn (Callback cb) {
-			this.setPositionFn = cb;
+		public void RemovePositionFn () {
+			this.setPositionFn = null;
 		}
 
 		public void Spin (float speed) {

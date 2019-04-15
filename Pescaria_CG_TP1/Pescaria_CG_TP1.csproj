@@ -70,11 +70,13 @@
     <Compile Include="OpenGLForm.Designer.cs">
       <DependentUpon>OpenGLForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Prefabs\Bombs.cs" />
     <Compile Include="Prefabs\Fish.cs" />
+    <Compile Include="Prefabs\Fish3.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\Game.cs" />
-    <Compile Include="Scenes\GameHUD.cs" />
+    <Compile Include="Prefabs\GameHUD.cs" />
     <EmbeddedResource Include="OpenGLForm.resx">
       <DependentUpon>OpenGLForm.cs</DependentUpon>
     </EmbeddedResource>

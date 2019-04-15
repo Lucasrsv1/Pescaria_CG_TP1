@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Pescaria_CG_TP1.Engine;
+using Pescaria_CG_TP1.Scenes;
 using System.Drawing;
-using Pescaria_CG_TP1.Engine;
 using SharpGL;
 using SharpGL.Enumerations;
 
-namespace Pescaria_CG_TP1.Scenes {
+namespace Pescaria_CG_TP1.Prefabs {
 	public class GameHUD : IHUD {
 		private static int PADDING = 5;
 		private static int FONT_SIZE = 24;
