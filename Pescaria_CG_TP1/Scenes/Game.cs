@@ -10,6 +10,8 @@ namespace Pescaria_CG_TP1.Scenes {
 	public class Game : IScene {
 		private static bool aimTextureRegistered = false;
 		private static uint AIM_TEXTURE_ID;
+
+		public static bool GameEnded;
 		public static float CameraYPosition;
 
 		public Game (OpenGL gl) {
@@ -27,6 +29,7 @@ namespace Pescaria_CG_TP1.Scenes {
 		private GameHUD gameHUD;
 
 		public void InitScene () {
+			GameEnded = false;
 			gameHUD = new GameHUD(gl);
 			gameHUD.Init();
 			SceneManager.HUD = gameHUD;
@@ -58,14 +61,12 @@ namespace Pescaria_CG_TP1.Scenes {
 			}
 
 			// Create player's aim
-			GameObject aim = new GameObject(new Vector2(50, 50), "Aim");
+			GameObject aim = new GameObject(new Vector2(40, 40), "Aim");
 			aim.Animator.AddTexture("AIM", AIM_TEXTURE_ID);
 			aim.Animator.CurrentTexture = "AIM";
-			aim.Transform.Spin(-3);
 			aim.Transform.SetPositionFn(() => {
 				aim.Transform.Position = SceneManager.MousePositionInScene() - aim.Transform.Size / 2f;
 			});
-			SceneManager.AddObject(aim);
 			SceneManager.Aim = aim;
 		}
 
@@ -123,7 +124,7 @@ namespace Pescaria_CG_TP1.Scenes {
 					Fish.Instantiate(SceneManager.Player, new Vector2(0, fishPos));		// Fishes 1 and 2
 
 				fishPos += (float) this.random.NextDouble() * 175;
-				Thread.Sleep((int) Math.Round(random.NextDouble() * 650));
+				Thread.Sleep((int) Math.Round(random.NextDouble() * 450));
 			}
 		}
 
@@ -131,7 +132,7 @@ namespace Pescaria_CG_TP1.Scenes {
 			float bombPos = 200 + (float) this.random.NextDouble() * 500;
 			while (bombPos < 9400 && (SceneManager.Form == null || !SceneManager.Form.IsDisposed)) {
 				Bombs.Instantiate(new Vector2(0, bombPos));
-				bombPos += (float) this.random.NextDouble() * 900;
+				bombPos += (float) this.random.NextDouble() * 850;
 				Thread.Sleep((int) Math.Round(random.NextDouble() * 650));
 			}
 		}

@@ -89,6 +89,8 @@ namespace Pescaria_CG_TP1.Engine {
 			}
 
 			HUD.OpenGLDraw(glWidth, glHeight);
+			if (Aim != null)
+				Aim.OpenGLDraw(glWidth, glHeight);
 		}
 
 		public static Vector2 MousePositionInScene () {
@@ -106,7 +108,7 @@ namespace Pescaria_CG_TP1.Engine {
 				// If the object was clicked, call its callback
 				if (SceneObjects[i].Tag == "Bubble") {
 					// Bubbles are small, so consider the aim object area insted of the cursor point
-					if (Vector2.Overlap(SceneObjects[i].Transform, Aim.Transform)) {
+					if (!Game.GameEnded && Vector2.Overlap(SceneObjects[i].Transform, Aim.Transform)) {
 						SceneObjects[i].Clicked();
 						break;
 					}

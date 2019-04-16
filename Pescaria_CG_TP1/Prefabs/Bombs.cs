@@ -63,17 +63,6 @@ namespace Pescaria_CG_TP1.Prefabs {
 
 			bomb.AddOnCollisionListener("EXPLODE", (GameObject collider) => {
 				if (collider.Tag == "Player") {
-					GameObject explosion = new GameObject(Vector2.One * bomb.Transform.Size.X * 2.5, "Explosion", bomb.Transform.Position - bomb.Transform.Size);
-					explosion.Animator.AddTexture("EXPLOSION", EXPLOSION_TEXTURES_IDS[random.Next(EXPLOSION_TEXTURES_IDS.Length)], 14, 600, Texture.Orientations.BOTH, 4);
-					explosion.Animator.CurrentTexture = "EXPLOSION";
-
-					AnimationClip animationClip = new AnimationClip(AnimationClip.ClipTypes.ONCE);
-					animationClip.AddClipPoint(600);
-					animationClip.AddClipPoint(100, "", null, explosion.Destroy);
-					explosion.Animator.AddAnimationClip("AUTO_DESTROY", animationClip);
-					explosion.Animator.PlayAnimationClip("AUTO_DESTROY");
-					SceneManager.AddObject(explosion);
-
 					// Take one player's life and destroy all fishes he hooked
 					SceneManager.Player.Lives--;
 					for (int i = 0; i < SceneManager.SceneObjects.Count; i++) {
@@ -81,9 +70,28 @@ namespace Pescaria_CG_TP1.Prefabs {
 							SceneManager.SceneObjects[i--].Destroy();
 					}
 
+					Explode(bomb);
 					bomb.Destroy();
 				}
 			});
+
+			bomb.AddOnClickListener(() => {
+				Explode(bomb);
+				bomb.Destroy();
+			});
+		}
+
+		private static void Explode (GameObject bomb) {
+			GameObject explosion = new GameObject(Vector2.One * bomb.Transform.Size.X * 2.5, "Explosion", bomb.Transform.Position - bomb.Transform.Size);
+			explosion.Animator.AddTexture("EXPLOSION", EXPLOSION_TEXTURES_IDS[random.Next(EXPLOSION_TEXTURES_IDS.Length)], 14, 600, Texture.Orientations.BOTH, 4);
+			explosion.Animator.CurrentTexture = "EXPLOSION";
+
+			AnimationClip animationClip = new AnimationClip(AnimationClip.ClipTypes.ONCE);
+			animationClip.AddClipPoint(600);
+			animationClip.AddClipPoint(1000, "", null, explosion.Destroy);
+			explosion.Animator.AddAnimationClip("AUTO_DESTROY", animationClip);
+			explosion.Animator.PlayAnimationClip("AUTO_DESTROY");
+			SceneManager.AddObject(explosion);
 		}
 
 		private static AnimationClip GetAnimationClip (int animationIdx, GameObject bomb) {

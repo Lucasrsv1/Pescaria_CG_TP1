@@ -57,6 +57,10 @@ namespace Pescaria_CG_TP1.Engine {
 			moviments.Add(new Moviment(newPosition, duration, this.Position));
 		}
 
+		public void StopTranslations () {
+			this.moviments.Clear();
+		}
+
 		public void SetPositionFn (Callback cb) {
 			this.setPositionFn = cb;
 			this.moviments.Clear();

@@ -1,4 +1,5 @@
 ﻿using Pescaria_CG_TP1.Engine;
+using Pescaria_CG_TP1.Scenes;
 using SharpGL;
 using System;
 using System.Drawing;
@@ -36,7 +37,7 @@ namespace Pescaria_CG_TP1.Prefabs {
 
 			// Handle collision with the hook (player)
 			fish.AddOnCollisionListener("HOOKED", (collider) => {
-				if (collider.Tag == "Player") {
+				if (collider.Tag == "Player" && !Game.GameEnded) {
 					fish.Tag = "Hooked_Fish";
 					fish.RemoveCollisionListener("HOOKED");
 					fish.Animator.StopAnimationClip();

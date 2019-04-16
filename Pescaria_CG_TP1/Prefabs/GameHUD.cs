@@ -96,7 +96,7 @@ namespace Pescaria_CG_TP1.Prefabs {
 				gl.PopMatrix();
 
 				// Show the player's lifes
-				for (int i = 0; i <= this.food.Length; i++) {
+				for (int i = 0; i < this.food.Length; i++) {
 					if (SceneManager.Player.Lives <= i) continue;
 
 					gl.BindTexture(OpenGL.GL_TEXTURE_2D, this.FISH_FOOD_TEXTURE_IDS[i]);
@@ -118,6 +118,11 @@ namespace Pescaria_CG_TP1.Prefabs {
 					gl.PopMatrix();
 				}
 			gl.PopMatrix();
+
+			if (Game.GameEnded) {
+				gl.DrawText((int) ((SceneManager.ScreenSize.X - FONT_SIZE * 6.5) / 2f), (int) ((SceneManager.ScreenSize.Y - FONT_SIZE * 1.5) / 2f), 1, 1, 1, "Arial", FONT_SIZE, "Fim de Jogo!");
+				gl.DrawText(PADDING * 4, PADDING * 4, 1, 1, 1, "Arial", FONT_SIZE * 0.75f, "Pressione R para reiniciar ou ESC para voltar ao menu.");
+			}
 
 			gl.Disable(OpenGL.GL_TEXTURE_2D);
 		}

@@ -1,12 +1,13 @@
 ﻿using Pescaria_CG_TP1.Scenes;
-using SharpGL;
 using SharpGL.Enumerations;
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Pescaria_CG_TP1.Engine {
 	public class PlayerObject : GameObject {
+		public static int memoryFishScore = 0;
+		public static int memoryBubbleScore = 0;
+
 		public PlayerObject (Vector2 size, string tag = "", Vector2 position = null, double rotation = 0, Vector2 scale = null) : base(size, tag, position, rotation, scale) {
 			AnimationClip animationClip = new AnimationClip(AnimationClip.ClipTypes.ONCE);
 			animationClip.AddClipPoint(5000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 500, 0, SceneManager.ScreenSize.Y));
@@ -53,39 +54,65 @@ namespace Pescaria_CG_TP1.Engine {
 			});
 
 			animationClip.AddClipPoint(5000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -250));
+			animationClip.AddClipPoint(3000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 0));
 			animationClip.AddClipPoint(500, AnimationClip.CURRENT_TEXTURE, null, () => {
-				for (int i = 0; i < SceneManager.SceneObjects.Count; i++) {
-					// Remove objects that are not needed anymore
-					if (SceneManager.SceneObjects[i].Tag == "Hooked_Fish" || SceneManager.SceneObjects[i].Tag == "Aim")
-						SceneManager.SceneObjects[i--].Destroy();
-				}
+				memoryFishScore = this.FishScore;
+				memoryBubbleScore = this.BubblesScore;
+				SceneManager.ReleadLevel();
 			});
 
 			this.Animator.AddAnimationClip("CLIP", animationClip);
 			this.Animator.PlayAnimationClip("CLIP");
 			this.Lives = 4;
-			this.FishScore = 0;
-			this.BubblesScore = 0;
+			this.FishScore = memoryFishScore > 0 ? memoryFishScore : 0;
+			this.BubblesScore = memoryBubbleScore > 0 ? memoryBubbleScore : 0;
+
+			memoryFishScore = 0;
+			memoryBubbleScore = 0;
 		}
 
+		private int lives;
 		private int bubblesScore;
 		private int movimentSpeed = 1;
 		private DateTime lastKeyTime = SceneManager.Now;
 		private Vector2 speedCounter = Vector2.Zero;
 
-		public int Lives { get; set; }
 		public int FishScore { get; set; }
+
+		public int Lives {
+			get {
+				return this.lives;
+			}
+			set {
+				this.lives = value;
+				if (value <= 0) GameOver();
+			}
+		}
+
 		public int BubblesScore {
 			get {
 				return this.bubblesScore;
 			}
 			set {
-				if (value >= 10 && this.Lives < 4) {
-					this.Lives++;
+				if (value >= 10) {
+					this.Lives = Math.Min(4, this.Lives + 1);
 					this.bubblesScore = 0;
 				} else {
 					this.bubblesScore = value;
 				}
+			}
+		}
+
+		private void GameOver () {
+			this.Animator.StopAnimationClip();
+			this.Animator.CurrentTexture = AnimationClip.INVISIBLE;
+			this.Transform.StopTranslations();
+			Game.GameEnded = true;
+			SceneManager.Aim = null;
+			for (int i = 0; i < SceneManager.SceneObjects.Count; i++) {
+				// Remove objects that are not needed anymore
+				if (SceneManager.SceneObjects[i].Tag == "Hooked_Fish")
+					SceneManager.SceneObjects[i--].Destroy();
 			}
 		}
 
@@ -100,7 +127,7 @@ namespace Pescaria_CG_TP1.Engine {
 				this.Transform.Position.X -= movimentSpeed;
 
 				if (++speedCounter.X > 15) {
-					movimentSpeed = Math.Min(movimentSpeed + 1, 10);
+					movimentSpeed = Math.Min(movimentSpeed + 1, 15);
 					speedCounter.X = 0;
 				}
 
@@ -111,7 +138,7 @@ namespace Pescaria_CG_TP1.Engine {
 				this.Transform.Position.X += movimentSpeed;
 
 				if (++speedCounter.Y > 15) {
-					movimentSpeed = Math.Min(movimentSpeed + 1, 10);
+					movimentSpeed = Math.Min(movimentSpeed + 1, 15);
 					speedCounter.Y = 0;
 				}
 
@@ -130,19 +157,21 @@ namespace Pescaria_CG_TP1.Engine {
 			Vector2 start = new Vector2(this.Transform.Position.X + (this.Transform.Size.X * 0.575f * rotationFactor), this.Transform.Position.Y + (this.Transform.Size.Y * (this.Transform.Scale.Y == -1 ? 0.87f : 0.13f)));
 			Vector2 screenXMiddle = new Vector2((SceneManager.ScreenSize.X - 34) / 2f, 0);
 
-			gl.Color(1f, 0.686f, 0.176f);
-			gl.PointSize(7);
-			gl.Begin(BeginMode.Points);
+			if (this.Animator.CurrentTexture != AnimationClip.INVISIBLE) {
+				gl.Color(1f, 0.686f, 0.176f);
+				gl.PointSize(7);
+				gl.Begin(BeginMode.Points);
 				gl.Vertex(start.X, start.Y, 1);
-			gl.End();
+				gl.End();
 
-			gl.LineWidth(3.5f);
-			gl.Begin(BeginMode.Lines);
+				gl.LineWidth(3.5f);
+				gl.Begin(BeginMode.Lines);
 				gl.Vertex(start.X, start.Y, 1);
 				gl.Vertex(screenXMiddle.X, 0, 1);
-			gl.End();
+				gl.End();
 
-			gl.Color(1f, 1f, 1f);
+				gl.Color(1f, 1f, 1f);
+			}
 		}
 	}
 }
