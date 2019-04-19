@@ -45,6 +45,22 @@ namespace Pescaria_CG_TP1.Engine {
 			return textureID[0];
 		}
 
+		public static void DrawTexture (Vector2 size, Texture tex, int frame = 0, float zIndex = 0) {
+			gl.Begin(BeginMode.TriangleFan);
+				tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.TOP_LEFT);
+				gl.Vertex(size.X / -2f, size.Y / -2f, zIndex);
+
+				tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.TOP_RIGHT);
+				gl.Vertex(size.X / 2f, size.Y / -2f, zIndex);
+
+				tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.BOTTOM_RIGHT);
+				gl.Vertex(size.X / 2f, size.Y / 2f, zIndex);
+
+				tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.BOTTOM_LEFT);
+				gl.Vertex(size.X / -2f, size.Y / 2f, zIndex);
+			gl.End();
+		}
+
 		public Animator () {
 			this.Textures = new Dictionary<string, Texture>();
 			this.AnimationClips = new Dictionary<string, AnimationClip>();
@@ -100,6 +116,11 @@ namespace Pescaria_CG_TP1.Engine {
 			this.CurrentAnimationClip = "";
 		}
 
+		public void SkipAnimationClipPoint () {
+			if (this.IsPlayingClip())
+				this.AnimationClips[this.CurrentAnimationClip].SkipClipPoint();
+		}
+
 		public bool IsPlayingClip () {
 			return !string.IsNullOrEmpty(this.CurrentAnimationClip) && this.AnimationClips.ContainsKey(this.CurrentAnimationClip);
 		}
@@ -131,19 +152,7 @@ namespace Pescaria_CG_TP1.Engine {
 					gl.Translate(transform.Position.X + (transform.Size.X / 2f) + (transform.Scale.X == -1 ? transform.Size.X : 0), transform.Position.Y + (transform.Size.Y / 2f) + (transform.Scale.Y == -1 ? transform.Size.Y : 0), 1);
 					gl.Rotate(-transform.Rotation, 0, 0, 1);
 					gl.Scale(transform.Scale.X, transform.Scale.Y, 1);
-					gl.Begin(BeginMode.TriangleFan);
-						texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.TOP_LEFT);
-						gl.Vertex(transform.Size.X / -2f, transform.Size.Y / -2f, this.ZIndex);
-
-						texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.TOP_RIGHT);
-						gl.Vertex(transform.Size.X / 2f, transform.Size.Y / -2f, this.ZIndex);
-
-						texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.BOTTOM_RIGHT);
-						gl.Vertex(transform.Size.X / 2f, transform.Size.Y / 2f, this.ZIndex);
-
-						texture.SetFrameCoordinates(this.currentFrame, Texture.CoordinatesPosition.BOTTOM_LEFT);
-						gl.Vertex(transform.Size.X / -2f, transform.Size.Y / 2f, this.ZIndex);
-					gl.End();
+					DrawTexture(transform.Size, texture, this.currentFrame);
 				gl.PopMatrix();
 
 				gl.Disable(OpenGL.GL_TEXTURE_2D);

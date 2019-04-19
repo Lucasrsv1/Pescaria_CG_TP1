@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Media;
 using System.Threading;
+using NAudio.Wave;
 using Pescaria_CG_TP1.Engine;
 using Pescaria_CG_TP1.Prefabs;
 using SharpGL;
@@ -8,13 +10,19 @@ using SharpGL.Enumerations;
 
 namespace Pescaria_CG_TP1.Scenes {
 	public class Game : IScene {
-		private static bool aimTextureRegistered = false;
+		private static bool keepPlaying;
 		private static uint AIM_TEXTURE_ID;
+
+		private static bool aimTextureRegistered = false;
+		private static readonly SoundPlayer bubbleAudio = new SoundPlayer("./Audio/Bubble.wav");
+		private static readonly AudioFileReader audioFile = new AudioFileReader("./Audio/Breakout.mp3");
 
 		public static bool GameEnded;
 		public static float CameraYPosition;
+		public static WaveOutEvent OutputDevice = new WaveOutEvent();
 
 		public Game (OpenGL gl) {
+			SceneManager.IsMute = false;
 			this.gl = gl;
 			this.random = new Random();
 
@@ -68,6 +76,35 @@ namespace Pescaria_CG_TP1.Scenes {
 				aim.Transform.Position = SceneManager.MousePositionInScene() - aim.Transform.Size / 2f;
 			});
 			SceneManager.Aim = aim;
+
+			// Play games' song
+			long position;
+			try {
+				position = OutputDevice.GetPosition();
+			} catch {
+				position = 0;
+			}
+
+			if (position == 0) {
+				keepPlaying = true;
+				OutputDevice.PlaybackStopped += SongStopped;
+				OutputDevice.Init(audioFile);
+				OutputDevice.Play();
+			}
+		}
+
+		public void DisposeScene () {
+			keepPlaying = false;
+			OutputDevice.Stop();
+			OutputDevice.PlaybackStopped -= SongStopped;
+			audioFile.Seek(0, System.IO.SeekOrigin.Begin);
+		}
+
+		private void SongStopped (object sender, StoppedEventArgs e) {
+			if (keepPlaying) {
+				audioFile.Seek(0, System.IO.SeekOrigin.Begin);
+				OutputDevice.Play();
+			}
 		}
 
 		public void CreateBackground () {
@@ -101,6 +138,9 @@ namespace Pescaria_CG_TP1.Scenes {
 				GameObject bubble = new GameObject(new Vector2(size, size), "Bubble", pos);
 				bubble.Animator.AddTexture("BUBBLE", gameHUD.BUBBLE_TEXTURE_ID);
 				bubble.AddOnClickListener(() => {
+					if (!SceneManager.IsMute)
+						bubbleAudio.Play();
+
 					SceneManager.Player.BubblesScore++;
 					bubble.Destroy();
 				});

@@ -33,9 +33,11 @@ namespace Pescaria_CG_TP1.Engine {
 			this.clipPoints = new List<ClipPoint>();
 			this.started = null;
 			this.backward = false;
+			this.skipCurrentClipPoint = false;
 		}
 
 		private bool backward;
+		private bool skipCurrentClipPoint;
 		private DateTime? started;
 		private List<ClipPoint> clipPoints;
 
@@ -43,6 +45,10 @@ namespace Pescaria_CG_TP1.Engine {
 
 		public void AddClipPoint (int duration, string textureKey = "", Vector2 move = null, Callback before = null) {
 			this.clipPoints.Add(new ClipPoint(duration, textureKey, move, before));
+		}
+
+		public void SkipClipPoint () {
+			this.skipCurrentClipPoint = true;
 		}
 
 		public void OpenGLDraw (Animator animator, Transform transform) {
@@ -53,9 +59,17 @@ namespace Pescaria_CG_TP1.Engine {
 			} else {
 				double timePassed = SceneManager.Now.Subtract((DateTime)this.started).TotalMilliseconds;
 				if (!this.backward) {
-					// Encontra o ponto de clipe atual com a animação normal
+					// Finds the current animation clip point
 					for (int c = 0; c < this.clipPoints.Count; c++) {
 						if (timePassed < this.clipPoints[c].Duration) {
+							if (this.skipCurrentClipPoint) {
+								// Skip the current clip by pretending that the clip started before it actually started
+								// The expression "timePassed - this.clipPoints[c].Duration" is how long it would have
+								// taken to end the clip point if it were fully played
+								this.started = ((DateTime) this.started).AddMilliseconds(timePassed - this.clipPoints[c++].Duration);
+								this.skipCurrentClipPoint = false;
+							}
+
 							clip = this.clipPoints[c];
 							break;
 						}
@@ -63,9 +77,17 @@ namespace Pescaria_CG_TP1.Engine {
 						timePassed -= this.clipPoints[c].Duration;
 					}
 				} else {
-					// Encontra o ponto de clipe atual com a animação tocando ao contrário
+					// Finds the current animation clip point when the animation is playing backwards
 					for (int c = this.clipPoints.Count - 1; c >= 0; c--) {
 						if (timePassed < this.clipPoints[c].Duration) {
+							if (this.skipCurrentClipPoint) {
+								// Skip the current clip by pretending that the clip started before it actually started
+								// The expression "timePassed - this.clipPoints[c].Duration" is how long it would have
+								// taken to end the clip point if it were fully played
+								this.started = ((DateTime) this.started).AddMilliseconds(timePassed - this.clipPoints[c--].Duration);
+								this.skipCurrentClipPoint = false;
+							}
+
 							clip = this.clipPoints[c];
 							break;
 						}
@@ -75,9 +97,9 @@ namespace Pescaria_CG_TP1.Engine {
 				}
 				
 				if (clip == null) {
-					// O clipe chegou ao fim
+					// The clip has ended
 					for (int c = 0; c < this.clipPoints.Count; c++) {
-						// Restaura o clip no início
+						// Reset the clip to the begining
 						this.clipPoints[c].MoveAdded = false;
 						this.clipPoints[c].CallbackCalled = false;
 					}

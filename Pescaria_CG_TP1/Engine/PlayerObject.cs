@@ -1,10 +1,17 @@
-﻿using Pescaria_CG_TP1.Scenes;
+﻿using Pescaria_CG_TP1.Prefabs;
+using Pescaria_CG_TP1.Scenes;
 using SharpGL.Enumerations;
 using System;
+using System.Collections.Generic;
+using System.Media;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Pescaria_CG_TP1.Engine {
 	public class PlayerObject : GameObject {
+		private static readonly SoundPlayer lifeSound = new SoundPlayer("./Audio/Powerup.wav");
+
+		public static int memoryLives = 0;
 		public static int memoryFishScore = 0;
 		public static int memoryBubbleScore = 0;
 
@@ -21,7 +28,7 @@ namespace Pescaria_CG_TP1.Engine {
 				this.Transform.Scale.Y = -1;
 			});
 
-			animationClip.AddClipPoint(15000, AnimationClip.INVISIBLE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -7000), () => {
+			animationClip.AddClipPoint(12000, AnimationClip.INVISIBLE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -7000), () => {
 				// Start part II
 				Game.CreateClouds();
 				Random random = new Random();
@@ -31,17 +38,19 @@ namespace Pescaria_CG_TP1.Engine {
 						SceneManager.SceneObjects[i--].Destroy();
 				}
 
+				int totalHookedFishes = 0;
 				for (int i = 0; i < SceneManager.SceneObjects.Count; i++) {
 					// Add moviment to the fishes that the player must click on
 					GameObject obj = SceneManager.SceneObjects[i];
 					if (obj.Tag != "Hooked_Fish") continue;
 
+					totalHookedFishes++;
 					obj.Transform.Spin(5);
 					obj.Transform.RemovePositionFn();
 					obj.Animator.StopAnimationClip();
 
 					AnimationClip fishAnimationClip = new AnimationClip(AnimationClip.ClipTypes.ONCE);
-					fishAnimationClip.AddClipPoint((int) (14000 + (random.NextDouble() * 2000)), AnimationClip.CURRENT_TEXTURE, new Vector2((float) random.NextDouble() * (SceneManager.ScreenSize.X - obj.Transform.Size.X), -7000, SceneManager.ScreenSize.X, 0, obj.Transform.Size.X, 0));
+					fishAnimationClip.AddClipPoint((int) (11000 + (random.NextDouble() * 2000)), AnimationClip.CURRENT_TEXTURE, new Vector2((float) random.NextDouble() * (SceneManager.ScreenSize.X - obj.Transform.Size.X), -7000, SceneManager.ScreenSize.X, 0, obj.Transform.Size.X, 0));
 					fishAnimationClip.AddClipPoint(4500, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 0));
 
 					obj.Animator.AddAnimationClip("CLIP_2", fishAnimationClip);
@@ -49,6 +58,8 @@ namespace Pescaria_CG_TP1.Engine {
 					obj.AddOnClickListener(() => {
 						obj.Destroy();
 						this.FishScore += (int) Math.Round(obj.Transform.Size.Y / 10f) * 10;
+						if (--totalHookedFishes == 0)
+							this.Animator.SkipAnimationClipPoint();
 					});
 				}
 			});
@@ -56,6 +67,7 @@ namespace Pescaria_CG_TP1.Engine {
 			animationClip.AddClipPoint(5000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -250));
 			animationClip.AddClipPoint(3000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 0));
 			animationClip.AddClipPoint(500, AnimationClip.CURRENT_TEXTURE, null, () => {
+				memoryLives = this.Lives;
 				memoryFishScore = this.FishScore;
 				memoryBubbleScore = this.BubblesScore;
 				SceneManager.ReleadLevel();
@@ -63,10 +75,11 @@ namespace Pescaria_CG_TP1.Engine {
 
 			this.Animator.AddAnimationClip("CLIP", animationClip);
 			this.Animator.PlayAnimationClip("CLIP");
-			this.Lives = 4;
+			this.Lives = memoryLives > 0 ? memoryLives: 4;
 			this.FishScore = memoryFishScore > 0 ? memoryFishScore : 0;
 			this.BubblesScore = memoryBubbleScore > 0 ? memoryBubbleScore : 0;
 
+			memoryLives = 0;
 			memoryFishScore = 0;
 			memoryBubbleScore = 0;
 		}
@@ -97,6 +110,8 @@ namespace Pescaria_CG_TP1.Engine {
 				if (value >= 10) {
 					this.Lives = Math.Min(4, this.Lives + 1);
 					this.bubblesScore = 0;
+					if (!SceneManager.IsMute)
+						lifeSound.Play();
 				} else {
 					this.bubblesScore = value;
 				}
@@ -104,6 +119,7 @@ namespace Pescaria_CG_TP1.Engine {
 		}
 
 		private void GameOver () {
+			if (Game.GameEnded) return;
 			this.Animator.StopAnimationClip();
 			this.Animator.CurrentTexture = AnimationClip.INVISIBLE;
 			this.Transform.StopTranslations();
@@ -114,9 +130,61 @@ namespace Pescaria_CG_TP1.Engine {
 				if (SceneManager.SceneObjects[i].Tag == "Hooked_Fish")
 					SceneManager.SceneObjects[i--].Destroy();
 			}
+
+			Dictionary<string, int> scores = new Dictionary<string, int>();
+			string[] highscores = SceneManager.ReadFile("./highscores.dat");
+			for (int i = 0; i < 4 && i < highscores.Length; i++) {
+				string[] parts = highscores[i].Split(';');
+				if (parts.Length > 1) {
+					int.TryParse(parts[1], out int v);
+					scores.Add(parts[0] + "_" + i, v);
+				}
+			}
+
+			IOrderedEnumerable<KeyValuePair<string, int>> descScores = from ele in scores
+																	   orderby ele.Value descending
+																	   select ele;
+
+			GameHUD.Highscores = new string[4] { "", "", "", "" };
+			for (int i = 0; i < 4; i++) {
+				if (descScores.Count() > i)
+					GameHUD.Highscores[i] = descScores.ElementAt(i).Key.Substring(0, descScores.ElementAt(i).Key.LastIndexOf("_")) + ";" + descScores.ElementAt(i).Value;
+			}
+
+			for (int i = 0; i < 4; i++) {
+				if (!GameHUD.IsNewScore && this.FishScore > 0 && (descScores.Count() > i && this.FishScore > descScores.ElementAt(i).Value || descScores.Count() <= i)) {
+					GameHUD.IsNewScore = true;
+					GameHUD.PlayerName = "";
+					GameHUD.NewScorePosition = i;
+					for (int j = 3; j > i; j--)
+						GameHUD.Highscores[j] = GameHUD.Highscores[j - 1];
+				}
+			}
 		}
 
 		public void PreviewKeyDown (PreviewKeyDownEventArgs e) {
+			if (Game.GameEnded && GameHUD.IsNewScore) {
+				 if (GameHUD.PlayerName.Length < 20) {
+					if (e.KeyValue >= 65 && e.KeyValue <= 90 || e.KeyValue >= 48 && e.KeyValue <= 57)
+						GameHUD.PlayerName += (char) (e.KeyValue + (Control.IsKeyLocked(Keys.CapsLock) ? (e.Shift ? 32 : 0) : (e.Shift ? 0 : 32)));
+					else if (e.KeyValue == 32)
+						GameHUD.PlayerName += " ";
+					else if (e.KeyData == Keys.OemPeriod)
+						GameHUD.PlayerName += ".";
+				}
+
+				if (e.KeyCode == Keys.Return) {
+					GameHUD.Highscores[GameHUD.NewScorePosition] = GameHUD.PlayerName + ";" + this.FishScore;
+					GameHUD.IsNewScore = false;
+					GameHUD.PlayerName = "";
+					GameHUD.NewScorePosition = -1;
+					SceneManager.WriteFile("./highscores.dat", GameHUD.Highscores);
+				} else if (e.KeyCode == Keys.Back) {
+					GameHUD.PlayerName = GameHUD.PlayerName.Substring(0, Math.Max(0, GameHUD.PlayerName.Length - 1));
+				}
+				return;
+			}
+
 			if (SceneManager.IsPaused && !this.InteractiveDuringPause) return;
 
 			if (SceneManager.Now.Subtract(lastKeyTime).TotalMilliseconds > 600)
@@ -126,8 +194,8 @@ namespace Pescaria_CG_TP1.Engine {
 				if (speedCounter.Y > 0) movimentSpeed = 1;
 				this.Transform.Position.X -= movimentSpeed;
 
-				if (++speedCounter.X > 15) {
-					movimentSpeed = Math.Min(movimentSpeed + 1, 15);
+				if (++speedCounter.X > 10) {
+					movimentSpeed = Math.Min(movimentSpeed + 2, 20);
 					speedCounter.X = 0;
 				}
 
@@ -137,8 +205,8 @@ namespace Pescaria_CG_TP1.Engine {
 				if (speedCounter.X > 0) movimentSpeed = 1;
 				this.Transform.Position.X += movimentSpeed;
 
-				if (++speedCounter.Y > 15) {
-					movimentSpeed = Math.Min(movimentSpeed + 1, 15);
+				if (++speedCounter.Y > 10) {
+					movimentSpeed = Math.Min(movimentSpeed + 2, 20);
 					speedCounter.Y = 0;
 				}
 

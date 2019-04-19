@@ -4,6 +4,7 @@ using System;
 using System.Windows.Forms;
 using Pescaria_CG_TP1.Engine;
 using Pescaria_CG_TP1.Scenes;
+using Pescaria_CG_TP1.Prefabs;
 
 namespace Pescaria_CG_TP1 {
 	public partial class OpenGLForm : Form {
@@ -66,7 +67,7 @@ namespace Pescaria_CG_TP1 {
 				Application.Exit();
 			else if (e.KeyCode == Keys.P)
 				SceneManager.Pause();
-			else if (e.KeyCode == Keys.R)
+			else if (e.KeyCode == Keys.R && !GameHUD.IsNewScore)
 				SceneManager.ReleadLevel();
 
 			if (SceneManager.Player != null)

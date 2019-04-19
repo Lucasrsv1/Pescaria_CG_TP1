@@ -1,15 +1,18 @@
 ﻿using Pescaria_CG_TP1.Engine;
 using System;
 using System.Drawing;
+using System.Media;
 
 namespace Pescaria_CG_TP1.Prefabs {
 	public class Bombs {
-		private static Random random = new Random();
 		private static bool texturesRegistered = false;
+		private static readonly SoundPlayer explosionSound = new SoundPlayer ("./Audio/Explosion.wav");
+		private static readonly Random random = new Random();
 
-		public static Bitmap[] BOMB_TEXTURES = new Bitmap[3] {
+		public static readonly Bitmap[] BOMB_TEXTURES = new Bitmap[4] {
 			new Bitmap("./Textures/FLOATING_MINE.png"),
 			new Bitmap("./Textures/TNT.png"),
+			new Bitmap("./Textures/BOMB.png"),
 			new Bitmap("./Textures/TORPEDO.png")
 		};
 
@@ -37,12 +40,12 @@ namespace Pescaria_CG_TP1.Prefabs {
 			GameObject bomb;
 			int size = 60 + random.Next(40);
 			double bombType = random.NextDouble();
-			if (bombType < 0.66) {
+			float fraction = 1f / BOMB_TEXTURES.Length;
+			if (bombType < 1 - fraction) {
 				bomb = new GameObject(new Vector2(size, size), "Bomb", position);
-				bomb.Animator.AddTexture("BOMB", BOMB_TEXTURES_IDS[bombType < 0.4 ? 0 : 1]);
+				bomb.Animator.AddTexture("BOMB", BOMB_TEXTURES_IDS[(int) Math.Floor(bombType / fraction)]);
 				bomb.Animator.CurrentTexture = "BOMB";
-				if (bombType < 0.4)
-					bomb.Transform.Spin(3);
+				bomb.Transform.Spin(3);
 
 				// Select a random animation clip
 				bomb.Animator.AddAnimationClip("CLIP", GetAnimationClip(random.Next(4), bomb));
@@ -51,7 +54,7 @@ namespace Pescaria_CG_TP1.Prefabs {
 				SceneManager.AddObject(bomb);
 			} else {
 				bomb = new GameObject(new Vector2(size, size * 0.65f), "Bomb", position);
-				bomb.Animator.AddTexture("BOMB", BOMB_TEXTURES_IDS[2]);
+				bomb.Animator.AddTexture("BOMB", BOMB_TEXTURES_IDS[BOMB_TEXTURES.Length - 1]);
 				bomb.Animator.CurrentTexture = "BOMB";
 
 				// Select a random animation clip
@@ -92,35 +95,37 @@ namespace Pescaria_CG_TP1.Prefabs {
 			explosion.Animator.AddAnimationClip("AUTO_DESTROY", animationClip);
 			explosion.Animator.PlayAnimationClip("AUTO_DESTROY");
 			SceneManager.AddObject(explosion);
+			if (!SceneManager.IsMute)
+				explosionSound.Play();
 		}
 
 		private static AnimationClip GetAnimationClip (int animationIdx, GameObject bomb) {
 			AnimationClip animationClip = new AnimationClip(AnimationClip.ClipTypes.LOOP);
 			switch (animationIdx) {
 				case 0:
-					animationClip.AddClipPoint(5000, "BOMB", new Vector2(400 - bomb.Transform.Size.X, Transform.DISABLE_AXIS_MOVIMENT, 400, 0, bomb.Transform.Size.X, 0));
-					animationClip.AddClipPoint(5000, "BOMB", new Vector2(0, Transform.DISABLE_AXIS_MOVIMENT));
+					animationClip.AddClipPoint(6000, "BOMB", new Vector2(400 - bomb.Transform.Size.X, Transform.DISABLE_AXIS_MOVIMENT, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(6000, "BOMB", new Vector2(0, Transform.DISABLE_AXIS_MOVIMENT));
 					break;
 				case 1:
-					animationClip.AddClipPoint(5000, "BOMB", new Vector2(0, bomb.Transform.Position.Y + 200, 400, 0, bomb.Transform.Size.X, 0), () => {
+					animationClip.AddClipPoint(6000, "BOMB", new Vector2(0, bomb.Transform.Position.Y + 200, 400, 0, bomb.Transform.Size.X, 0), () => {
 						bomb.Transform.Position.X = SceneManager.ScreenSize.X - bomb.Transform.Size.X;
 					});
-					animationClip.AddClipPoint(2000, "BOMB", new Vector2(150, bomb.Transform.Position.Y, 400, 0, bomb.Transform.Size.X, 0));
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(400 - bomb.Transform.Size.X, Transform.DISABLE_AXIS_MOVIMENT, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(3000, "BOMB", new Vector2(150, bomb.Transform.Position.Y, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(400 - bomb.Transform.Size.X, Transform.DISABLE_AXIS_MOVIMENT, 400, 0, bomb.Transform.Size.X, 0));
 					break;
 				case 2:
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(200 - bomb.Transform.Size.X / 2f, bomb.Transform.Position.Y + 200, 400, 0, bomb.Transform.Size.X, 0));
-					animationClip.AddClipPoint(2000);
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(400 - bomb.Transform.Size.X, bomb.Transform.Position.Y, 400, 0, bomb.Transform.Size.X, 0));
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(200 - bomb.Transform.Size.X / 2f, bomb.Transform.Position.Y - 200, 400, 0, bomb.Transform.Size.X, 0));
-					animationClip.AddClipPoint(2000);
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(0, bomb.Transform.Position.Y, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(200 - bomb.Transform.Size.X / 2f, bomb.Transform.Position.Y + 200, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(3000);
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(400 - bomb.Transform.Size.X, bomb.Transform.Position.Y, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(200 - bomb.Transform.Size.X / 2f, bomb.Transform.Position.Y - 200, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(3000);
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(0, bomb.Transform.Position.Y, 400, 0, bomb.Transform.Size.X, 0));
 					break;
 				default:
-					animationClip.AddClipPoint(5000, "BOMB", new Vector2(400 - bomb.Transform.Size.X, bomb.Transform.Position.Y + 250, 400, 0, bomb.Transform.Size.X, 0));
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(0, bomb.Transform.Position.Y + 250, 400, 0, bomb.Transform.Size.X, 0));
-					animationClip.AddClipPoint(5000, "BOMB", new Vector2(400 - bomb.Transform.Size.X, bomb.Transform.Position.Y, 400, 0, bomb.Transform.Size.X, 0));
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(0, bomb.Transform.Position.Y, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(6000, "BOMB", new Vector2(400 - bomb.Transform.Size.X, bomb.Transform.Position.Y + 250, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(0, bomb.Transform.Position.Y + 250, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(6000, "BOMB", new Vector2(400 - bomb.Transform.Size.X, bomb.Transform.Position.Y, 400, 0, bomb.Transform.Size.X, 0));
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(0, bomb.Transform.Position.Y, 400, 0, bomb.Transform.Size.X, 0));
 					break;
 			}
 			return animationClip;
@@ -130,39 +135,39 @@ namespace Pescaria_CG_TP1.Prefabs {
 			AnimationClip animationClip = new AnimationClip(AnimationClip.ClipTypes.LOOP);
 			switch (animationIdx) {
 				case 0:
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(405, Transform.DISABLE_AXIS_MOVIMENT, 400, 0), () => {
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(405, Transform.DISABLE_AXIS_MOVIMENT, 400, 0), () => {
 						bomb.Transform.Scale.X = 1;
 					});
-					animationClip.AddClipPoint(1500);
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(bomb.Transform.Size.X * -2, Transform.DISABLE_AXIS_MOVIMENT), () => {
+					animationClip.AddClipPoint(2000);
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(bomb.Transform.Size.X * -2, Transform.DISABLE_AXIS_MOVIMENT), () => {
 						bomb.Transform.Scale.X = -1;
 					});
-					animationClip.AddClipPoint(1500);
+					animationClip.AddClipPoint(2000);
 					break;
 				case 1:
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(405, bomb.Transform.Position.Y + 250, 400, 0), () => {
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(405, bomb.Transform.Position.Y + 250, 400, 0), () => {
 						bomb.Transform.Scale.X = 1;
 						bomb.Transform.Rotation = -30;
 					});
-					animationClip.AddClipPoint(1500);
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(bomb.Transform.Size.X * -2, bomb.Transform.Position.Y), () => {
+					animationClip.AddClipPoint(2000);
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(bomb.Transform.Size.X * -2, bomb.Transform.Position.Y), () => {
 						bomb.Transform.Scale.X = -1;
 						bomb.Transform.Rotation = -30;
 					});
-					animationClip.AddClipPoint(1500);
+					animationClip.AddClipPoint(2000);
 					break;
 				default:
 					if (bomb.Transform.Position.Y < 250) return GetTorpedoAnimationClip(1, bomb);
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(405, bomb.Transform.Position.Y - 250, 400, 0), () => {
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(405, bomb.Transform.Position.Y - 250, 400, 0), () => {
 						bomb.Transform.Scale.X = 1;
 						bomb.Transform.Rotation = 30;
 					});
-					animationClip.AddClipPoint(1500);
-					animationClip.AddClipPoint(3000, "BOMB", new Vector2(bomb.Transform.Size.X * -2, bomb.Transform.Position.Y), () => {
+					animationClip.AddClipPoint(2000);
+					animationClip.AddClipPoint(4000, "BOMB", new Vector2(bomb.Transform.Size.X * -2, bomb.Transform.Position.Y), () => {
 						bomb.Transform.Scale.X = -1;
 						bomb.Transform.Rotation = 30;
 					});
-					animationClip.AddClipPoint(1500);
+					animationClip.AddClipPoint(2000);
 					break;
 			}
 			return animationClip;
