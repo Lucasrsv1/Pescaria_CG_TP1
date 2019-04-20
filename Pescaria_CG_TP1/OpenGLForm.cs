@@ -12,6 +12,7 @@ namespace Pescaria_CG_TP1 {
 			InitializeComponent();
 			this.WindowState = FormWindowState.Maximized;
 			SceneManager.Form = this;
+			SceneManager.IsMute = false;
 		}
 
 		private int glWidth;
@@ -23,14 +24,17 @@ namespace Pescaria_CG_TP1 {
 			gl = openGLControl1.OpenGL;
 			Animator.gl = gl;
 			GameObject.gl = gl;
+			SceneManager.gl = gl;
 
 			LoadCoordinateSystem();
 
 			SceneManager.ScreenSize.X = glWidth;
 			SceneManager.ScreenSize.Y = glHeight;
 
+			SceneManager.RegisterNewScene("SPLASH_SCREEN", new SplashScreen(gl));
+			SceneManager.RegisterNewScene("MENU", new Scenes.Menu(gl));
 			SceneManager.RegisterNewScene("GAME", new Game(gl));
-			SceneManager.LoadScene("GAME");
+			SceneManager.LoadScene("SPLASH_SCREEN");
 		}
 
 		private void LoadCoordinateSystem () {
@@ -63,12 +67,20 @@ namespace Pescaria_CG_TP1 {
 		}
 
 		private void openGLControl1_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e) {
-			if (e.KeyCode == Keys.Escape)
-				Application.Exit();
-			else if (e.KeyCode == Keys.P)
+			if (e.KeyCode == Keys.Escape) {
+				if (SceneManager.CurrentScene == "MENU") {
+					if (!((MenuHUD) SceneManager.HUD).ShowAbout)
+						Application.Exit();
+					else
+						((MenuHUD) SceneManager.HUD).HideAbout();
+				} else {
+					SceneManager.LoadScene("MENU");
+				}
+			} else if (e.KeyCode == Keys.P && SceneManager.CurrentScene == "GAME") {
 				SceneManager.Pause();
-			else if (e.KeyCode == Keys.R && !GameHUD.IsNewScore)
+			} else if (e.KeyCode == Keys.R && !GameHUD.IsNewScore && SceneManager.CurrentScene == "GAME") {
 				SceneManager.ReleadLevel();
+			}
 
 			if (SceneManager.Player != null)
 				SceneManager.Player.PreviewKeyDown(e);

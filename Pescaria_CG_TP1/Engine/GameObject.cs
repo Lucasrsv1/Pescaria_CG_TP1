@@ -9,18 +9,44 @@ namespace Pescaria_CG_TP1.Engine {
 
 		public GameObject (Vector2 size, string tag = "", Vector2 position = null, double rotation = 0, Vector2 scale = null) {
 			this.Animator = new Animator();
-			this.Transform = new Transform(size, position, rotation, scale, tag);
+			this.Transform = new Transform(this, size, position, rotation, scale, tag);
 			this.InteractiveDuringPause = false;
 			this.Tag = tag;
 		}
 
-		private List<EventCallback> onClickCallbacks = new List<EventCallback>();
-		private Dictionary<string, CollisionCallback> onCollisionCallbacks = new Dictionary<string, CollisionCallback>();
+		private bool isMouseInside = false;
+		private readonly List<EventCallback> onClickCallbacks = new List<EventCallback>();
+		private readonly List<EventCallback> onHoverCallbacks = new List<EventCallback>();
+		private readonly List<EventCallback> onMouseLeaveCallbacks = new List<EventCallback>();
+		private readonly Dictionary<string, CollisionCallback> onCollisionCallbacks = new Dictionary<string, CollisionCallback>();
 
-		public string Tag { get; set; }
+		public bool IsHidden { get; set; }
 		public bool InteractiveDuringPause { get; set; }
+		public string Tag { get; set; }
 		public Animator Animator { get; private set; }
 		public Transform Transform { get; private set; }
+
+		public void Hover () {
+			if (!isMouseInside) {
+				isMouseInside = true;
+				foreach (EventCallback cb in this.onHoverCallbacks) cb();
+			}
+		}
+
+		public void AddOnHoverListener (EventCallback eventCallback) {
+			this.onHoverCallbacks.Add(eventCallback);
+		}
+
+		public void MouseOut () {
+			if (isMouseInside) {
+				isMouseInside = false;
+				foreach (EventCallback cb in this.onMouseLeaveCallbacks) cb();
+			}
+		}
+
+		public void AddOnMouseLeaveListener (EventCallback eventCallback) {
+			this.onMouseLeaveCallbacks.Add(eventCallback);
+		}
 
 		public void Clicked () {
 			foreach (EventCallback cb in this.onClickCallbacks) cb();

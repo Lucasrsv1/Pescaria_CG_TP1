@@ -66,6 +66,7 @@ namespace Pescaria_CG_TP1.Engine {
 			this.AnimationClips = new Dictionary<string, AnimationClip>();
 
 			this.ZIndex = 0;
+			this.Color = Color.FromArgb(255, 255, 255, 255);
 			this.currentFrame = -1;
 			this.texturesToLoad = new List<TextureToLoad>();
 		}
@@ -87,6 +88,7 @@ namespace Pescaria_CG_TP1.Engine {
 		}
 
 		public float ZIndex { get; set; }
+		public Color Color { get; set; }
 		public string CurrentAnimationClip { get; private set; }
 
 		public Dictionary<string, Texture> Textures { get; private set; }
@@ -152,20 +154,23 @@ namespace Pescaria_CG_TP1.Engine {
 					gl.Translate(transform.Position.X + (transform.Size.X / 2f) + (transform.Scale.X == -1 ? transform.Size.X : 0), transform.Position.Y + (transform.Size.Y / 2f) + (transform.Scale.Y == -1 ? transform.Size.Y : 0), 1);
 					gl.Rotate(-transform.Rotation, 0, 0, 1);
 					gl.Scale(transform.Scale.X, transform.Scale.Y, 1);
+
+					gl.Color(this.Color.R / 255f, this.Color.G / 255f, this.Color.B / 255f, transform.GameObject.IsHidden ? 0 : this.Color.A / 255f);
 					DrawTexture(transform.Size, texture, this.currentFrame);
+					gl.Color(1f, 1f, 1f);
 				gl.PopMatrix();
 
 				gl.Disable(OpenGL.GL_TEXTURE_2D);
+			}
 
-				if (SceneManager.SHOW_COLLIDERS) {
-					gl.LineWidth(3);
-					gl.Begin(BeginMode.LineLoop);
-						gl.Vertex(transform.PhysicalPosition.X, transform.PhysicalPosition.Y, 0f);
-						gl.Vertex(transform.PhysicalPosition.X + transform.Size.X, transform.PhysicalPosition.Y, 0f);
-						gl.Vertex(transform.PhysicalPosition.X + transform.Size.X, transform.PhysicalPosition.Y + transform.Size.Y, 0f);
-						gl.Vertex(transform.PhysicalPosition.X, transform.PhysicalPosition.Y + transform.Size.Y, 0f);
-					gl.End();
-				}
+			if (SceneManager.SHOW_COLLIDERS) {
+				gl.LineWidth(3);
+				gl.Begin(BeginMode.LineLoop);
+					gl.Vertex(transform.PhysicalPosition.X, transform.PhysicalPosition.Y, 0f);
+					gl.Vertex(transform.PhysicalPosition.X + transform.Size.X, transform.PhysicalPosition.Y, 0f);
+					gl.Vertex(transform.PhysicalPosition.X + transform.Size.X, transform.PhysicalPosition.Y + transform.Size.Y, 0f);
+					gl.Vertex(transform.PhysicalPosition.X, transform.PhysicalPosition.Y + transform.Size.Y, 0f);
+				gl.End();
 			}
 
 			// Load textures that have been setted to be loaded after a timeout

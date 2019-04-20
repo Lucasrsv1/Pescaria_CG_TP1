@@ -26,10 +26,17 @@ https://indiedevs.itch.io/70-video-game-effects
 Trophies and star:
 https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?item=1a4q8358241i0a4l2t
 
+Volume icon:
+https://d1zqayhc1yz6oo.cloudfront.net/24425ce646ecd2d804f55e009a530a66.png
+
 Aim:
 https://www.kisspng.com/png-aim-png-50112/download-png.html
+
+Button background:
+https://commons.wikimedia.org/wiki/File:HILLBLU_button_background.svg
 
 Audios:
 https://learnopengl.com/In-Practice/2D-Game/Audio
 https://www.freesoundeffects.com/free-track/explosion-3-466448/
 https://www.soundsnap.com/search/audio/bubble/score
+http://soundimage.org/wp-content/uploads/2016/11/Remote-Island_Looping.mp3

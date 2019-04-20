@@ -25,6 +25,7 @@ namespace Pescaria_CG_TP1 {
 		/// o conteúdo deste método com o editor de código.
 		/// </summary>
 		private void InitializeComponent () {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OpenGLForm));
 			this.openGLControl1 = new SharpGL.OpenGLControl();
 			((System.ComponentModel.ISupportInitialize)(this.openGLControl1)).BeginInit();
 			this.SuspendLayout();
@@ -56,8 +57,9 @@ namespace Pescaria_CG_TP1 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(799, 598);
 			this.Controls.Add(this.openGLControl1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "OpenGLForm";
-			this.Text = "Form1";
+			this.Text = "Bob, The Fisher";
 			((System.ComponentModel.ISupportInitialize)(this.openGLControl1)).EndInit();
 			this.ResumeLayout(false);
 

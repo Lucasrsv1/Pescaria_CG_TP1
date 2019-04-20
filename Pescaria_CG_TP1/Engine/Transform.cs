@@ -20,7 +20,8 @@ namespace Pescaria_CG_TP1.Engine {
 			public DateTime Initiated { get; private set; }
 		}
 
-		public Transform (Vector2 size, Vector2 position = null, double rotation = 0, Vector2 scale = null, string tag = "") {
+		public Transform (GameObject gameObject, Vector2 size, Vector2 position = null, double rotation = 0, Vector2 scale = null, string tag = "") {
+			this.GameObject = gameObject;
 			this.Size = size;
 			this.Position = position ?? Vector2.Zero;
 			this.Rotation = rotation;
@@ -36,6 +37,7 @@ namespace Pescaria_CG_TP1.Engine {
 
 		public string Tag { get; set; }
 		public double Rotation { get; set; }
+		public GameObject GameObject { get; private set; }
 		public Vector2 Scale { get; set; }
 		public Vector2 Position { get; set; }
 		public Vector2 Size { get; set; }

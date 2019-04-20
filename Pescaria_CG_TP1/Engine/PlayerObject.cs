@@ -28,6 +28,7 @@ namespace Pescaria_CG_TP1.Engine {
 				this.Transform.Scale.Y = -1;
 			});
 
+			bool notFalling = true;
 			animationClip.AddClipPoint(12000, AnimationClip.INVISIBLE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -7000), () => {
 				// Start part II
 				Game.CreateClouds();
@@ -52,19 +53,24 @@ namespace Pescaria_CG_TP1.Engine {
 					AnimationClip fishAnimationClip = new AnimationClip(AnimationClip.ClipTypes.ONCE);
 					fishAnimationClip.AddClipPoint((int) (11000 + (random.NextDouble() * 2000)), AnimationClip.CURRENT_TEXTURE, new Vector2((float) random.NextDouble() * (SceneManager.ScreenSize.X - obj.Transform.Size.X), -7000, SceneManager.ScreenSize.X, 0, obj.Transform.Size.X, 0));
 					fishAnimationClip.AddClipPoint(4500, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 0));
+					fishAnimationClip.AddClipPoint(500, AnimationClip.CURRENT_TEXTURE, null, obj.Destroy);
 
 					obj.Animator.AddAnimationClip("CLIP_2", fishAnimationClip);
 					obj.Animator.PlayAnimationClip("CLIP_2");
 					obj.AddOnClickListener(() => {
 						obj.Destroy();
 						this.FishScore += (int) Math.Round(obj.Transform.Size.Y / 10f) * 10;
-						if (--totalHookedFishes == 0)
+						if (--totalHookedFishes == 0 && notFalling)
 							this.Animator.SkipAnimationClipPoint();
 					});
 				}
 			});
 
-			animationClip.AddClipPoint(5000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -250));
+			animationClip.AddClipPoint(5000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, -250), () => {
+				// Ensure the animation won't be skepped
+				notFalling = false;
+			});
+
 			animationClip.AddClipPoint(3000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 0));
 			animationClip.AddClipPoint(500, AnimationClip.CURRENT_TEXTURE, null, () => {
 				memoryLives = this.Lives;

@@ -22,7 +22,6 @@ namespace Pescaria_CG_TP1.Scenes {
 		public static WaveOutEvent OutputDevice = new WaveOutEvent();
 
 		public Game (OpenGL gl) {
-			SceneManager.IsMute = false;
 			this.gl = gl;
 			this.random = new Random();
 
@@ -32,11 +31,13 @@ namespace Pescaria_CG_TP1.Scenes {
 			}
 		}
 
+		private bool IsDisposed;
 		private OpenGL gl;
 		private Random random;
 		private GameHUD gameHUD;
 
 		public void InitScene () {
+			IsDisposed = false;
 			GameEnded = false;
 			gameHUD = new GameHUD(gl);
 			gameHUD.Init();
@@ -65,7 +66,7 @@ namespace Pescaria_CG_TP1.Scenes {
 			float bubblePos = 500;
 			while (bubblePos < 17000) {
 				CreateBubbles(new Vector2((float)this.random.NextDouble() * SceneManager.ScreenSize.X, bubblePos, SceneManager.ScreenSize.X, 0));
-				bubblePos += (float) this.random.NextDouble() * 500;
+				bubblePos += 50 + (float) this.random.NextDouble() * 475;
 			}
 
 			// Create player's aim
@@ -94,10 +95,12 @@ namespace Pescaria_CG_TP1.Scenes {
 		}
 
 		public void DisposeScene () {
+			CameraYPosition = 0;
 			keepPlaying = false;
 			OutputDevice.Stop();
 			OutputDevice.PlaybackStopped -= SongStopped;
 			audioFile.Seek(0, System.IO.SeekOrigin.Begin);
+			IsDisposed = true;
 		}
 
 		private void SongStopped (object sender, StoppedEventArgs e) {
@@ -157,7 +160,7 @@ namespace Pescaria_CG_TP1.Scenes {
 
 		public void CreateFishes () {
 			float fishPos = 200 + (float) this.random.NextDouble() * 150;
-			while (fishPos < 9400 && (SceneManager.Form == null || !SceneManager.Form.IsDisposed)) {
+			while (!IsDisposed && fishPos < 9400 && (SceneManager.Form == null || !SceneManager.Form.IsDisposed)) {
 				if (random.NextDouble() <= 0.33)
 					Fish3.Instantiate(SceneManager.Player, new Vector2(0, fishPos));
 				else
@@ -170,9 +173,9 @@ namespace Pescaria_CG_TP1.Scenes {
 
 		public void CreateBombs () {
 			float bombPos = 200 + (float) this.random.NextDouble() * 500;
-			while (bombPos < 9400 && (SceneManager.Form == null || !SceneManager.Form.IsDisposed)) {
+			while (!IsDisposed && bombPos < 9400 && (SceneManager.Form == null || !SceneManager.Form.IsDisposed)) {
 				Bombs.Instantiate(new Vector2(0, bombPos));
-				bombPos += (float) this.random.NextDouble() * 850;
+				bombPos += 80 + (float) this.random.NextDouble() * 800;
 				Thread.Sleep((int) Math.Round(random.NextDouble() * 650));
 			}
 		}
@@ -196,7 +199,7 @@ namespace Pescaria_CG_TP1.Scenes {
 
 		public void OpenGLDraw (int glWidth, int glHeight) {
 			// Anda com a cena para cima à medida que o anzol afunda (rola a câmera)
-			Game.CameraYPosition = Math.Max(250 - SceneManager.Player.Transform.Position.Y, -9600 + SceneManager.ScreenSize.Y);
+			CameraYPosition = Math.Max(250 - SceneManager.Player.Transform.Position.Y, -9600 + SceneManager.ScreenSize.Y);
 			gl.Translate(0, Game.CameraYPosition, 0);
 			
 			// Background color
