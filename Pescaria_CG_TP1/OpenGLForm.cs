@@ -33,6 +33,7 @@ namespace Pescaria_CG_TP1 {
 
 			SceneManager.RegisterNewScene("SPLASH_SCREEN", new SplashScreen(gl));
 			SceneManager.RegisterNewScene("MENU", new Scenes.Menu(gl));
+			SceneManager.RegisterNewScene("STORY_MANAGER", new StoryManager(gl));
 			SceneManager.RegisterNewScene("GAME", new Game(gl));
 			SceneManager.LoadScene("SPLASH_SCREEN");
 		}
@@ -80,6 +81,8 @@ namespace Pescaria_CG_TP1 {
 				SceneManager.Pause();
 			} else if (e.KeyCode == Keys.R && !GameHUD.IsNewScore && SceneManager.CurrentScene == "GAME") {
 				SceneManager.ReleadLevel();
+			} else if ((e.KeyCode == Keys.Return || e.KeyCode == Keys.Space) && SceneManager.CurrentScene == "STORY_MANAGER") {
+				StoryManager.NextSpeech();
 			}
 
 			if (SceneManager.Player != null)

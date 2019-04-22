@@ -73,10 +73,15 @@ namespace Pescaria_CG_TP1.Engine {
 
 			animationClip.AddClipPoint(3000, AnimationClip.CURRENT_TEXTURE, new Vector2(Transform.DISABLE_AXIS_MOVIMENT, 0));
 			animationClip.AddClipPoint(500, AnimationClip.CURRENT_TEXTURE, null, () => {
-				memoryLives = this.Lives;
-				memoryFishScore = this.FishScore;
-				memoryBubbleScore = this.BubblesScore;
-				SceneManager.ReleadLevel();
+				if (Game.Goal > 0 && this.FishScore >= Game.Goal) {
+					StoryManager.NextLevel();
+					SceneManager.LoadScene("STORY_MANAGER");
+				} else {
+					memoryLives = this.Lives;
+					memoryFishScore = this.FishScore;
+					memoryBubbleScore = this.BubblesScore;
+					SceneManager.ReleadLevel();
+				}
 			});
 
 			this.Animator.AddAnimationClip("CLIP", animationClip);
@@ -136,6 +141,8 @@ namespace Pescaria_CG_TP1.Engine {
 				if (SceneManager.SceneObjects[i].Tag == "Hooked_Fish")
 					SceneManager.SceneObjects[i--].Destroy();
 			}
+
+			if (Game.Goal > 0) return;
 
 			Dictionary<string, int> scores = new Dictionary<string, int>();
 			string[] highscores = SceneManager.ReadFile("./highscores.dat");

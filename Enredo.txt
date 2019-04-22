@@ -1,0 +1,155 @@
+["Nós aprendemos com nossos pais que são os indivíduos que determinam seu próprio futuro, isto é, principalmente sua ambição e trabalho duro que determina seu destino na vida." - Ronald Reagan]
+FASE 1 - 1º Trim. [15% prosp, 40% desemp, R$1250,00 salário min, R$1000,00 salário min liq, 20% taxes/todos, 35% taxes/empresas, R$0,00 receita acm, R$46343,75 gastos acm, 5 fun]:
+
+Gastos este mês: contratação 5 funcionários com salário de R$1125,00; R$25000,00 do barco; R$5000,00 da licença e R$10718,75 de imposto [R$46343,75 total]
+
+Empréstimo: R$40000,00 [Taxa de juros: 2% ao mês (26,82% ao ano)]
+
+Dívida: R$-40000,00
+Caixa: R$3656,25
+
+Falas:
+- Governador: Olá, eu sou o governador do Porto dos Peixes. Seja bem-vindo ao nosso maravilhoso estado!
+- Bob Fisher: Muito obrigado! Eu sou Bob Fisher e vim para cá com grandes sonhos e planos! Ouvi dizer que vocês têm águas com uma vasta variedade de peixes.
+- Governador: Sem dúvidas! Nosso mar tem muitos peixes, porém precisamos de alguém com interesse em em explorar nossas águas.
+- Bob Fisher: Pois então estou no lugar certo! Trabalhei por muitos anos com pesca e pretendo montar um negócio para explorar a riqueza deste mar e trazer empregos e prosperidade ao estado!
+- Banqueiro: É muito bom ouvir isso! Prazer, eu sou o dono do Banco do Porto dos Peixes, e gostaria de lhe propor uma ajuda nessa empreitada!
+- Bob Fisher: Pois tal ajuda será muito bem-vinda, Sr. Banqueiro. Embora tenha experiência com pesca, tenho apenas R$10.000,00 para investir no negócio.
+- Banqueiro: Minha proposta é a de um empréstimo de R$40.000,00 com taxa de juros de 2% ao mês, aproximadamente 26,82% ao ano. O que acha?
+- Bob Fisher: Acho excelente! Já tenho um barco em mente que custa R$25.000,00 e com este dinheiro poderei compra-lo. Também poderei pagar a taxa de R$5.000,00 pela licença de pesca. Porém notei que o salário mínimo atual é de R$1.250,00...
+- Governador: Certo, este é o valor.
+- Bob Fisher: Devido aos custos que terei como a compra de um barco e a licença, para viabilizar o negócio eu gostaria de contratar 5 funcionários, mas para isso o Governador precisará reduzir o salário mínimo para R$1125,00.
+- Governador: Bem, este tipo de medida não é nada popular... mas se você conseguir montar a empresa, ela prosperar e gerar mais empregos e melhores salários no futuro próximo, posso concordar.
+- Bob Fisher: Ótimo! Assumo tal compromisso, e estou animado para começar o trabalho.
+
+#################################################################################################################################
+
+["O homem não é livre a não ser que o Estado seja limitado. À medida que o governo expande, a liberdade contrai." - Ronald Reagan]
+FASE 2 - 2º Trim. [35% prosp, 20% desemp, R$1125,00 salário min, R$956,25 salario min liq, 15% taxes/todos, 25% taxes/empresas, R$39000,00 receita acm, R$79031,25 gastos acm, 10 fun]:
+
+Receita últimos 3 meses: R$39000,00
+Gastos últimos 2 meses: R$3937,50 de imposto e R$11250,00 de salário [R$15187,50 total]
+Gastos este mês: contratação 5 funcionários e aumento do salário para R$1400,00 (objetivando aumento de produtividade); R$3500,00 de imposto e R$14000,00 de salário [R$17500,00 total]
+
+Dívida: R$-42448,32
+Caixa: R$9968,75
+
+Falas:
+- Bob Fisher: Peixes e alimentos são uma grande e importante riqueza! No último trimestre vendemos R$39.000,00 em peixes que alimentaram as famílias ao longo de todo o estado de Porto dos Peixes! Em geral, cada funcionário produziu R$2.000,00 por mês e eu produzi R$3.000,00; provavelmente porque tenho mais experiência no ramo e trabalhei algumas horas a mais.
+- Bob Fisher: Eu amo o que faço e pretendo construir uma empresa grande e forte, e sei que para isso é necessário muito trabalho duro! Até o momento não obtive lucro algum, mas com o tempo será possível pagar o investimento inicial e a dívida que tenho com o banco, para então começar a ter lucro.
+- Bob Fisher: Com a diminuição do salário mínimo, outras empresas, não somente a minha, contrataram mais funcionários diminuindo a taxa de desemprego. E mais do que isso, com mais força de trabalho, mais riquezas foram criadas! Essa combinação trouxe mais prosperidade à Porto dos Peixes.
+- Bob Fisher: Sr. Governador, dados os bons resultados do último trimestre, o que acha de diminuir a quantidade de impostos que o estado cobra sobre as empresas e sua população? Eu lhe garanto que tal redução resultará em mais prosperidade, pois poderemos contratar ainda mais funcionários.
+- Governador: Sr. Fisher, eu aprendi que reduzir a interferência do estado sobre a vida das pessoas resulta no florescimento da liberdade e prosperidade do indivíduo. Sendo assim, reduzirei esse trimestre o imposto pago pela população para 15% e 25% para empresas.
+- Bob Fisher: Excelente! Como as coisas estão indo bem, farei mais um investimento: contratarei mais 5 funcionários. Agora, faço a seguinte proposta aos meus 10 funcionários: irei aumentar os salários para R$1.400,00 este mês e se vocês produzirem em média R$2.500,00 em peixes por mês, manterei tal valor.
+
+#################################################################################################################################
+
+["O governo deveria fazer apenas aquelas coisas que um indivíduo não pode fazer por conta própria." - Abraham Lincoln]
+FASE 3 - 3º Trim. [60% prosp, 5% desemp, R$1125,00 salário min, R$1012,50 salario min liq, 10% taxes/todos, 15% taxes/empresas, R$123000,00 receita acm, R$170381,25 gastos acm, 35 fun]:
+
+Receita últimos 3 meses: R$84000,00
+Gastos últimos 2 meses: R$7000,00 de imposto e R$28000,00 de salário [R$35000,00 total]
+Gastos este mês: contratação 25 funcionários com salário de R$1400,00; R$7350,00 de imposto e R$49000,00 de salário [R$56350,00 total]
+
+Dívida: R$-45046,49
+Caixa: R$2618,75
+
+Falas:
+- Bob Fisher: No último trimestre vendemos R$84.000,00 em peixes e a média de produção por funcionário subiu para R$2.500,00 por mês! Eles gostaram do incentivo e trabalharam duro para atingirem o objetivo. Sendo assim, esta empresa continuará pagando R$1.400,00 de salário. Parabéns a todos!
+- Bob Fisher: Sr. Governador, como deve ter observado, a redução de impostos permitiu as empresas a contratarem mais e aos funcionários a manterem mais do fruto de seu trabalho!
+- Governador: Sem dúvidas, Sr. Fisher. Após esta experiência, estou preparado para reduzir o imposto pago pela população para 10% e 15% para empresas. Continue o bom trabalho!
+- Bob Fisher: Com os ganhos que estamos tendo, acredito que no próximo trimestre conseguiremos receita suficiente para pagar nossa dívida com o banco!
+
+#################################################################################################################################
+
+["O capitalismo foi chamado de sistema da ganância. No entanto, é o sistema que elevou o padrão de vida de seus cidadãos mais pobres a um nível que nenhum sistema coletivista ou grupo tribal poderia jamais conceber." - Ayn Rand]
+FASE 4 - 4º Trim. [85% prosp, 3% desemp, R$1125,00 salário min, R$1012,50 salario min liq, 10% taxes/todos, 15% taxes/empresas, R$394500,00 receita acm, R$339431,25 gastos acm, 35 fun]:
+
+Receita últimos 3 meses: R$271500,00
+Gastos últimos 2 meses: R$14700,00 de imposto e R$98000,00 de salário [R$112700,00 total]
+Gastos este mês: R$7350,00 de imposto e R$49000,00 de salário [R$56350,00 total]
+
+Dívida: R$-47803,70
+Caixa: R$105068,75
+
+Pagamento do empréstimo
+
+Dívida: R$0,00
+Caixa: R$57265,05
+
+Falas:
+- Bob Fisher: No último trimestre vendemos R$271.500,00 em peixes.
+
+#################################################################################################################################
+
+["A felicidade não está relacionada ao materialismo ou a redistribuição de riqueza pelo governo. Ela está relacionada com o indivíduo definindo e buscando seus objetivos na vida. A promessa do livre mercado é permitir que o indivíduo conquiste seu próprio sucesso, buscando sua felicidade." - Arthur Brooks]
+FASE 5 - 1º Trim. [90% prosp, 3% desemp, R$2000,00 salário min, R$1800,00 salario min liq, 10% taxes/todos, 35% taxes/empresas, R$666000,00 receita acm, R$546631,25 gastos acm, 35 fun]:
+
+Receita últimos 3 meses: R$271500,00
+Gastos últimos 2 meses: R$14700,00 de imposto e R$98000,00 de salário [R$112700,00 total]
+Gastos este mês: R$24500,00 de imposto e R$70000,00 de salário [R$94500,00 total]
+
+Dívida: R$0,00
+Caixa: R$121565,05
+
+Falas:
+
+#################################################################################################################################
+
+["Um homem honesto é aquele que sabe que não pode consumir mais do que produziu." - Ayn Rand]
+FASE 6 - 2º Trim. [75% prosp, 13% desemp, R$2500,00 salário min, R$2250,00 salario min liq, 10% taxes/todos, 50% taxes/empresas, R$937500,00 receita acm, R$848131,25 gastos acm, 30 fun]:
+
+Receita últimos 3 meses: R$271500,00
+Gastos últimos 2 meses: R$49000,00 de imposto e R$140000,00 de salário [R$189000,00 total]
+Gastos este mês: demissão de 5 funcionários; R$37500,00 de imposto e R$75000,00 de salário [R$112500,00 total]
+
+Dívida: R$0,00
+Caixa: R$91565,05
+
+Falas:
+
+#################################################################################################################################
+
+["Desigualdade não é pobreza: combater a desigualdade não acaba com a pobreza e diminuir a pobreza não implica acabar com a desigualdade. É imprescindível separar esses dois conceitos para não sermos enganados pelos defensores do igualitarismo, os que querem apenas redistribuir a pobreza." - Mises Brasil]
+FASE 7 - 3º Trim. [50% prosp, 35% desemp, R$3500,00 salário min, R$3150,00 salario min liq, 10% taxes/todos, 77% taxes/empresas, R$1171500,00 receita acm, R$1135081,25 gastos acm, 10 fun]:
+
+Receita últimos 3 meses: R$234000,00
+Gastos últimos 2 meses: R$75000,00 de imposto e R$150000,00 de salário [R$225000,00 total]
+Gastos este mês: demissão de 20 funcionários; R$26950,00 de imposto e R$35000,00 de salário [R$61950,00 total]
+
+Dívida: R$0,00
+Caixa: R$38615,05
+
+Falas:
+
+#################################################################################################################################
+
+["O Capitalismo ensina as pessoas a trabalharem mais. Já o socialismo ensina as pessoas a pedirem mais." - Dennis Prager]
+FASE 8 - 4º Trim. [25% prosp, 50% desemp, R$3500,00 salário min, R$3150,00 salario min liq, 10% taxes/todos, 77% taxes/empresas, R$1255500,00 receita acm, R$1289956,25 gastos acm, 5 fun]:
+
+Receita últimos 3 meses: R$84000,00
+Gastos últimos 2 meses: R$53900,00 de imposto e R$70000,00 de salário [R$123900,00 total]
+Gastos este mês: demissão de 5 funcionários; R$13475,00 de imposto e R$17500,00 de salário [R$30975,00 total]
+
+Dívida: R$-32259,95
+Caixa: R$0,00
+
+Falas:
+
+#################################################################################################################################
+
+["O inerente vício do capitalismo é o inigualitário compartilhamento de bençãos, já a inerente virtude do socialismo é o igualitário compartilhamento de misérias." - Winston Churchill]
+FIM: [15% prosp, 60% desemp, R$3500,00 salário min, R$3150,00 salario min liq, 10% taxes/todos, 77% taxes/empresas, R$1302000,00 receita acm, R$1351906,25 gastos acm, empresa estatizada]
+
+Receita últimos 3 meses: R$46500,00
+Gastos últimos 2 meses: R$26950,00 de imposto e R$35000,00 de salário [R$61950,00 total]
+
+Dívida: R$-47709,95
+Caixa: R$0,00
+
+Entrada: R$25000,00 falsa indenização (pelo barco)
+
+Dívida: R$-22709,95
+Caixa: R$0,00
+
+Falas:

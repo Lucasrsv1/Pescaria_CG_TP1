@@ -9,7 +9,7 @@ namespace Pescaria_CG_TP1.Engine {
 		private static bool texturesRegistered = false;
 		private static readonly Bitmap BUTTON_TEXTURE = new Bitmap("./Textures/BUTTON.png");
 
-		public Button (string text, int fontSize, Vector2 size, Color color, string tag = "", Vector2 position = null, double rotation = 0, Vector2 scale = null) : base(size, tag, position, rotation, scale) {
+		public Button (string text, int fontSize, Color color, Vector2 size, string tag = "", Vector2 position = null, double rotation = 0, Vector2 scale = null) : base(size, tag, position, rotation, scale) {
 			this.Text = text;
 			this.FontSize = fontSize;
 			this.Color = color;

@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 
 namespace Pescaria_CG_TP1.Engine {
 	public class Animator {
+		public const string SOLID_TEXTURE = "SOLID_TEXTURE";
 		private struct TextureToLoad {
 			public TextureToLoad (string textureKey, int timeout) {
 				this.Timeout = timeout;
@@ -45,18 +46,22 @@ namespace Pescaria_CG_TP1.Engine {
 			return textureID[0];
 		}
 
-		public static void DrawTexture (Vector2 size, Texture tex, int frame = 0, float zIndex = 0) {
+		public static void DrawTexture (Vector2 size, Texture tex = null, int frame = 0, float zIndex = 0) {
 			gl.Begin(BeginMode.TriangleFan);
-				tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.TOP_LEFT);
+				if (tex != null)
+					tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.TOP_LEFT);
 				gl.Vertex(size.X / -2f, size.Y / -2f, zIndex);
 
-				tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.TOP_RIGHT);
+				if (tex != null)
+					tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.TOP_RIGHT);
 				gl.Vertex(size.X / 2f, size.Y / -2f, zIndex);
 
-				tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.BOTTOM_RIGHT);
+				if (tex != null)
+					tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.BOTTOM_RIGHT);
 				gl.Vertex(size.X / 2f, size.Y / 2f, zIndex);
 
-				tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.BOTTOM_LEFT);
+				if (tex != null)
+					tex.SetFrameCoordinates(frame, Texture.CoordinatesPosition.BOTTOM_LEFT);
 				gl.Vertex(size.X / -2f, size.Y / 2f, zIndex);
 			gl.End();
 		}
@@ -133,22 +138,25 @@ namespace Pescaria_CG_TP1.Engine {
 				this.AnimationClips[this.CurrentAnimationClip].OpenGLDraw(this, transform);
 			}
 
-			if (!string.IsNullOrEmpty(this.CurrentTexture) && this.Textures.ContainsKey(this.CurrentTexture)) {
-				// Plays the current texture animation
-				Texture texture = this.Textures[this.CurrentTexture];
-				if (this.currentFrame < 0 || this.currentFrame > texture.QtyFrames) {
-					this.currentFrame = 0;
-					this.frameInitiated = SceneManager.Now;
-				} else if (SceneManager.Now.Subtract(this.frameInitiated).TotalMilliseconds >= texture.FrameDuration) {
-					this.currentFrame++;
-					if (this.currentFrame > texture.QtyFrames)
+			if (!string.IsNullOrEmpty(this.CurrentTexture) && (this.Textures.ContainsKey(this.CurrentTexture) || this.CurrentTexture == SOLID_TEXTURE)) {
+				Texture texture = null;
+				if (this.CurrentTexture != SOLID_TEXTURE) {
+					// Plays the current texture animation
+					texture = this.Textures[this.CurrentTexture];
+					if (this.currentFrame < 0 || this.currentFrame > texture.QtyFrames) {
 						this.currentFrame = 0;
+						this.frameInitiated = SceneManager.Now;
+					} else if (SceneManager.Now.Subtract(this.frameInitiated).TotalMilliseconds >= texture.FrameDuration) {
+						this.currentFrame++;
+						if (this.currentFrame > texture.QtyFrames)
+							this.currentFrame = 0;
 
-					this.frameInitiated = SceneManager.Now;
+						this.frameInitiated = SceneManager.Now;
+					}
+
+					gl.Enable(OpenGL.GL_TEXTURE_2D);
+					gl.BindTexture(OpenGL.GL_TEXTURE_2D, texture.ID);
 				}
-
-				gl.Enable(OpenGL.GL_TEXTURE_2D);
-				gl.BindTexture(OpenGL.GL_TEXTURE_2D, texture.ID);
 
 				gl.PushMatrix();
 					gl.Translate(transform.Position.X + (transform.Size.X / 2f) + (transform.Scale.X == -1 ? transform.Size.X : 0), transform.Position.Y + (transform.Size.Y / 2f) + (transform.Scale.Y == -1 ? transform.Size.Y : 0), 1);
@@ -160,7 +168,8 @@ namespace Pescaria_CG_TP1.Engine {
 					gl.Color(1f, 1f, 1f);
 				gl.PopMatrix();
 
-				gl.Disable(OpenGL.GL_TEXTURE_2D);
+				if (this.CurrentTexture != SOLID_TEXTURE)
+					gl.Disable(OpenGL.GL_TEXTURE_2D);
 			}
 
 			if (SceneManager.SHOW_COLLIDERS) {

@@ -90,7 +90,7 @@ namespace Pescaria_CG_TP1.Prefabs {
 				gl.PushMatrix();
 					gl.Translate(SceneManager.ScreenSize.X / 2f - this.fishSize.X / 2f, (this.foodSize.Y - this.fishSize.Y) / 2f + this.fishSize.Y / 2f, 0);
 					Animator.DrawTexture(this.fishSize, this.fish, 0, 4);
-					gl.DrawText((int) (SceneManager.ScreenSize.X / 2f) + PADDING * 3, (int) SceneManager.ScreenSize.Y - PADDING - (int) ((this.fishSize.Y + FONT_SIZE) / 2), 1, 1, 1, "Arial", FONT_SIZE, SceneManager.Player.FishScore.ToString());
+					gl.DrawText((int) (SceneManager.ScreenSize.X / 2f) + PADDING * 3, (int) SceneManager.ScreenSize.Y - PADDING - (int) ((this.fishSize.Y + FONT_SIZE) / 2), 1, 1, 1, "Arial", FONT_SIZE, SceneManager.Player.FishScore.ToString() + (Game.Goal > 0 ? "/" + Game.Goal : ""));
 				gl.PopMatrix();
 
 				// Show the player's lifes
@@ -104,7 +104,7 @@ namespace Pescaria_CG_TP1.Prefabs {
 					gl.PopMatrix();
 				}
 
-				if (Game.GameEnded) {
+				if (Game.GameEnded && Game.Goal <= 0) {
 					// Show the highscores
 					gl.BindTexture(OpenGL.GL_TEXTURE_2D, this.HIGHSCORE_TEXTURES_IDS[0]);
 					gl.PushMatrix();
@@ -130,6 +130,9 @@ namespace Pescaria_CG_TP1.Prefabs {
 						else
 							gl.DrawText(PADDING * 4, PADDING * 4, 1, 1, 1, "Arial", FONT_SIZE * 0.75f, "Pressione R para reiniciar ou ESC para voltar ao menu.");
 					gl.PopMatrix();
+				} else if (Game.GameEnded) {
+					gl.DrawText((int) ((SceneManager.ScreenSize.X - FONT_SIZE * 6) / 2f), (int) ((SceneManager.ScreenSize.Y - FONT_SIZE * 1.5) / 2f), 1, 1, 1, "Arial", FONT_SIZE * 1.25f, "Você falhou!");
+					gl.DrawText(PADDING * 4, PADDING * 4, 1, 1, 1, "Arial", FONT_SIZE * 0.75f, "Pressione R para reiniciar ou ESC para voltar ao menu.");
 				} else if (SceneManager.IsPaused) {
 					gl.DrawText((int) ((SceneManager.ScreenSize.X - FONT_SIZE * 4) / 2f), (int) ((SceneManager.ScreenSize.Y - FONT_SIZE * 1.5) / 2f), 1, 1, 1, "Arial", FONT_SIZE * 1.25f, "PAUSE");
 					gl.DrawText(PADDING * 4, PADDING * 4, 1, 1, 1, "Arial", FONT_SIZE * 0.75f, "Pressione P para continuar.");

@@ -1,6 +1,7 @@
 ﻿using Pescaria_CG_TP1.Engine;
 using System.Drawing;
 using SharpGL;
+using Pescaria_CG_TP1.Scenes;
 
 namespace Pescaria_CG_TP1.Prefabs {
 	public class MenuHUD : IHUD {
@@ -24,7 +25,7 @@ namespace Pescaria_CG_TP1.Prefabs {
 				// Create a local variable in this scope that is not shared between the buttons
 				int idx = i;
 
-				buttons[idx] = new Button(BTN_TEXTS[idx], FONT_SIZE, this.buttonSize, this.buttonBackgroundColor);
+				buttons[idx] = new Button(BTN_TEXTS[idx], FONT_SIZE, this.buttonBackgroundColor, this.buttonSize);
 				buttons[idx].Transform.SetPositionFn(() => {
 					buttons[idx].Transform.Position.X = SceneManager.ScreenSize.X / 2f - this.buttonSize.X / 2f;
 					buttons[idx].Transform.Position.Y = PADDING * (3 + idx) + (int) (FONT_SIZE * 1.5) + this.buttonSize.Y / 2f + this.buttonSize.Y * idx;
@@ -32,10 +33,13 @@ namespace Pescaria_CG_TP1.Prefabs {
 
 				switch (idx) {
 					case 0:
-						buttons[idx].AddOnClickListener(() => {});
+						buttons[idx].AddOnClickListener(() => {
+							SceneManager.LoadScene("STORY_MANAGER");
+						});
 						break;
 					case 1:
 						buttons[idx].AddOnClickListener(() => {
+							Game.Goal = 0;
 							SceneManager.LoadScene("GAME");
 						});
 						break;

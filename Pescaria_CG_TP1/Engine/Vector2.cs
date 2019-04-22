@@ -106,6 +106,10 @@ namespace Pescaria_CG_TP1.Engine {
 			this.refY = 0;
 		}
 
+		public Vector2 WithRef (Vector2 reference) {
+			return new Vector2(this.X, this.Y, reference.X, reference.Y);
+		}
+
 		public Vector2 Clone () {
 			return new Vector2(this.x, this.y, this.refX, this.refY, this.constX, this.constY);
 		}

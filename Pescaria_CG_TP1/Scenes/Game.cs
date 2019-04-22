@@ -17,6 +17,7 @@ namespace Pescaria_CG_TP1.Scenes {
 		private static readonly SoundPlayer bubbleAudio = new SoundPlayer("./Audio/Bubble.wav");
 		private static readonly AudioFileReader audioFile = new AudioFileReader("./Audio/Breakout.mp3");
 
+		public static int Goal = 0;
 		public static bool GameEnded;
 		public static float CameraYPosition;
 		public static WaveOutEvent OutputDevice = new WaveOutEvent();

@@ -62,6 +62,7 @@
     <Compile Include="Engine\Button.cs" />
     <Compile Include="Engine\GameObject.cs" />
     <Compile Include="Engine\IHUD.cs" />
+    <Compile Include="Engine\Label.cs" />
     <Compile Include="Engine\PlayerObject.cs" />
     <Compile Include="Engine\IScene.cs" />
     <Compile Include="Engine\SceneManager.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Prefabs\GameHUD.cs" />
     <Compile Include="Scenes\SplashScreen.cs" />
     <Compile Include="Scenes\Menu.cs" />
+    <Compile Include="Scenes\StoryManager.cs" />
     <EmbeddedResource Include="OpenGLForm.resx">
       <DependentUpon>OpenGLForm.cs</DependentUpon>
     </EmbeddedResource>
