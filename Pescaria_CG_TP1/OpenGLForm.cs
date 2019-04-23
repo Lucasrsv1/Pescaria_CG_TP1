@@ -70,10 +70,14 @@ namespace Pescaria_CG_TP1 {
 		private void openGLControl1_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e) {
 			if (e.KeyCode == Keys.Escape) {
 				if (SceneManager.CurrentScene == "MENU") {
-					if (!((MenuHUD) SceneManager.HUD).ShowAbout)
-						Application.Exit();
-					else
+					if (MenuHUD.ShowAbout)
 						((MenuHUD) SceneManager.HUD).HideAbout();
+					else if (((MenuHUD) SceneManager.HUD).ShowLevels)
+						((MenuHUD) SceneManager.HUD).HideLevels();
+					else if (((MenuHUD) SceneManager.HUD).ShowInstructions)
+						((MenuHUD) SceneManager.HUD).HideIstructions();
+					else
+						Application.Exit();
 				} else {
 					SceneManager.LoadScene("MENU");
 				}

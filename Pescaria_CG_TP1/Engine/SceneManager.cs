@@ -228,7 +228,7 @@ namespace Pescaria_CG_TP1.Engine {
 		public static void MouseClick () {
 			if (IsLoadingScene) return;
 			for (int i = SceneObjects.Count - 1; i >= 0; i--) {
-				if (!SceneObjects[i].HasClickListeners() || (IsPaused && !SceneObjects[i].InteractiveDuringPause)) continue;
+				if (!SceneObjects[i].HasClickListeners() || (IsPaused && !SceneObjects[i].InteractiveDuringPause) || SceneObjects[i].IsHidden) continue;
 
 				// If the object was clicked, calls its callback
 				if (SceneObjects[i].Tag == "Bubble") {

@@ -40,6 +40,7 @@ https://learnopengl.com/In-Practice/2D-Game/Audio
 https://www.freesoundeffects.com/free-track/explosion-3-466448/
 https://www.soundsnap.com/search/audio/bubble/score
 http://soundimage.org/wp-content/uploads/2016/11/Remote-Island_Looping.mp3
+http://soundimage.org/wp-content/uploads/2016/09/Jewel-Thieves_Looping.mp3
 
 Charts:
 https://ecomfe.github.io/echarts-examples/public/editor.html?c=gauge
