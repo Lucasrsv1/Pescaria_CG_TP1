@@ -1,4 +1,12 @@
-﻿using System;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Engine
+///   Class:			Label
+///   Description:		Draws a text in the determined area with alignment.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 

@@ -1,4 +1,12 @@
-﻿using SharpGL;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Engine
+///   Class:			Animator
+///   Description:		Draws an object and handle animations, using textures and animation clips.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using SharpGL;
 using SharpGL.Enumerations;
 using System;
 using System.Collections.Generic;

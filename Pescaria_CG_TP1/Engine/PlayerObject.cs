@@ -1,4 +1,12 @@
-﻿using Pescaria_CG_TP1.Prefabs;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Engine
+///   Class:			PlayerObject
+///   Description:		Creates the player's object, movements and animations. Also handle lifes and points.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using Pescaria_CG_TP1.Prefabs;
 using Pescaria_CG_TP1.Scenes;
 using SharpGL.Enumerations;
 using System;

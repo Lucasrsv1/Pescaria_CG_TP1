@@ -1,4 +1,12 @@
-﻿using System;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Scenes
+///   Class:			Game
+///   Description:		Creates the game scene and all its objects.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using System;
 using System.Drawing;
 using System.Media;
 using System.Threading;

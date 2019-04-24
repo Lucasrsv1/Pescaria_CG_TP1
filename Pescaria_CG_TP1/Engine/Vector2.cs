@@ -1,4 +1,12 @@
-﻿using System;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Engine
+///   Class:			Vector2
+///   Description:		Represents points and vectors in the coordinate system. Also has proportion and overlap test capabilities.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using System;
 using System.Drawing;
 
 namespace Pescaria_CG_TP1.Engine {

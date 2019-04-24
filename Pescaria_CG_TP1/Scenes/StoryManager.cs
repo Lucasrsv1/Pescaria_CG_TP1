@@ -1,4 +1,12 @@
-﻿using NAudio.Wave;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Scenes
+///   Class:			StoryManager
+///   Description:		Shows the current level's story.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using NAudio.Wave;
 using Pescaria_CG_TP1.Engine;
 using Pescaria_CG_TP1.Prefabs;
 using SharpGL;
@@ -71,7 +79,7 @@ namespace Pescaria_CG_TP1.Scenes {
 				"Bob Fisher|Algumas pessoas acreditam que dinheiro é riqueza... o que é um tremendo engano! Dinheiro nada mais é do que uma representação da riqueza. A riqueza de verdade está nas fazendas de trigo e de grãos, no gado, nos porcos, nas galinhas e, claro, nos peixes que alimentam as famílias desse maravilhoso lugar!",
 				"Bob Fisher|Aquilo que produzimos, sejam alimentos, objetos, eletrodomésticos, bens ou serviços é que são de fato valiosos! Sem tais produtos ou sem o trabalho duro que cada um de nós coloca no processo de produção, o dinheiro não passaria de papel sem valor.",
 				"Bob Fisher|No último trimestre vendemos R$271.500,00 em peixes e pagamos R$22.050,00 de imposto e R$147.000,00 de salários. Finalmente, a empresa tem mais dinheiro em caixa do que deve ao banco. Portanto, irei pagar o valor de R$47.803,70 ao banco e quitarei a nossa dívida!",
-				"Banqueiro|Eu sabia que estava apostando no cavalo vencedor Sr. Fisher! Foi um enorme prazer participar da fundação de uma das mais importantes companhias de Porto dos Porcos.",
+				"Banqueiro|Eu sabia que estava apostando no cavalo vencedor Sr. Fisher! Foi um enorme prazer participar da fundação de uma das mais importantes companhias de Porto dos Peixes.",
 				"Bob Fisher|Eu que lhe agradeço! Espero que possamos fazer mais negócios no futuro e trabalhar mais em novos projetos. Mas por ora, vou pescar mais alguns valiosos peixes!"
 			},
 			new string[] {

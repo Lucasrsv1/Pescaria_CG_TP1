@@ -1,4 +1,12 @@
-﻿using Pescaria_CG_TP1.Engine;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Prefabs
+///   Class:			Fish
+///   Description:		Creates a random fish and handle its movement and behaviour.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using Pescaria_CG_TP1.Engine;
 using Pescaria_CG_TP1.Scenes;
 using SharpGL;
 using System;

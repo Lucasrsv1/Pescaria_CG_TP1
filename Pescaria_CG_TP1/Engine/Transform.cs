@@ -1,4 +1,12 @@
-﻿using System;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Engine
+///   Class:			Transform
+///   Description:		Handles position, size and movements of a GameObject.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using static Pescaria_CG_TP1.Engine.AnimationClip;
 

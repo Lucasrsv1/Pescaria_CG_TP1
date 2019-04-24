@@ -1,4 +1,12 @@
-﻿using Pescaria_CG_TP1.Engine;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Prefabs
+///   Class:			MenuHUD
+///   Description:		Creates the menu scene HUD, with buttons for navigation.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using Pescaria_CG_TP1.Engine;
 using System.Drawing;
 using SharpGL;
 using Pescaria_CG_TP1.Scenes;

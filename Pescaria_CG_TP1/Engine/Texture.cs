@@ -1,4 +1,12 @@
-﻿using System;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Engine
+///   Class:			Texture
+///   Description:		Load a sprite and handle its frames in order to create animations.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using System;
 using SharpGL;
 
 namespace Pescaria_CG_TP1.Engine {

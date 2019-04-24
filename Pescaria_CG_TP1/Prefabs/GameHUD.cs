@@ -1,4 +1,12 @@
-﻿using Pescaria_CG_TP1.Engine;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Prefabs
+///   Class:			GameHUD
+///   Description:		Creates the game scene HUD, with player's lifes and points.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using Pescaria_CG_TP1.Engine;
 using Pescaria_CG_TP1.Scenes;
 using System.Drawing;
 using SharpGL;

@@ -1,4 +1,12 @@
-﻿using SharpGL;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Engine
+///   Class:			GameObject
+///   Description:		Base class for all objects in the game. It has animation, movement and event capabilities.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using SharpGL;
 using System.Collections.Generic;
 
 namespace Pescaria_CG_TP1.Engine {

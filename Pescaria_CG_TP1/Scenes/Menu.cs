@@ -1,4 +1,12 @@
-﻿using NAudio.Wave;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Scenes
+///   Class:			Menu
+///   Description:		Creates the menu scene and all its objects.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using NAudio.Wave;
 using Pescaria_CG_TP1.Engine;
 using Pescaria_CG_TP1.Prefabs;
 using SharpGL;

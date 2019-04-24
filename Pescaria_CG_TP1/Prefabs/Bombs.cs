@@ -1,4 +1,12 @@
-﻿using Pescaria_CG_TP1.Engine;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Prefabs
+///   Class:			Bombs
+///   Description:		Creates a random bomb and handle its explosion.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using Pescaria_CG_TP1.Engine;
 using System;
 using System.Drawing;
 using System.Media;

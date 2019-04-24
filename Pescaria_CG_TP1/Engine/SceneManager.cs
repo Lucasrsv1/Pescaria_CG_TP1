@@ -1,4 +1,12 @@
-﻿using Pescaria_CG_TP1.Scenes;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Engine
+///   Class:			SceneManager
+///   Description:		Load scenes, draw objects and the HUD, check collisions and clicks.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using Pescaria_CG_TP1.Scenes;
 using SharpGL;
 using System;
 using System.Collections.Generic;

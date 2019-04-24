@@ -1,4 +1,12 @@
-﻿using System;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Engine
+///   Class:			AnimationClip
+///   Description:		Creates an animation using points of movement and change of textures.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 
 namespace Pescaria_CG_TP1.Engine {

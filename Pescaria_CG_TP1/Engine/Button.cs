@@ -1,4 +1,11 @@
-﻿using SharpGL;
+﻿///-----------------------------------------------------------------
+///   Namespace:		Pescaria_CG_TP1.Engine
+///   Class:			Button
+///   Description:		Draws a button with a text inside and hover effect.
+///   Subject:			Computer Graphics
+///   Author:			Lucas Rassilan Vilanova
+///-----------------------------------------------------------------
+
 using System;
 using System.Drawing;
 
