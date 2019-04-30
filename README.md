@@ -1,4 +1,7 @@
 # Trabalho Prático 1 - Bob, The Fisher
+## Trailer
+https://youtu.be/dtv4WyRyNgE
+
 ## Download do jogo
 1) Faça o download do jogo pelo link: http://bit.ly/2viqF15
 2) Descompacte o arquivo .zip que você baixou
